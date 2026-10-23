@@ -1,0 +1,17 @@
+PLATAFORMA U.E. FRANZ TAMAYO - 7 HTML AUTÓNOMOS
+
+Cada página HTML contiene su propio CSS dentro de <style> y su JavaScript dentro de <script>.
+No necesitas archivos .css o .js locales separados.
+
+Archivos:
+- index.html: Inicio
+- academico.html: Académico y BTH
+- noticias.html: Noticias y avisos
+- estudiantes.html: Portal de estudiantes
+- institucion.html: Nuestra institución
+- galeria.html: Galería de fotos
+- contacto.html: Contacto
+
+Uso: descomprime todo en una misma carpeta y abre index.html. Los enlaces entre páginas necesitan que los siete HTML permanezcan juntos.
+
+Nota: Tailwind CSS, las fuentes de Google y los iconos Lucide se cargan desde internet (CDN). El CSS y JavaScript propios de cada página sí están integrados en su HTML.

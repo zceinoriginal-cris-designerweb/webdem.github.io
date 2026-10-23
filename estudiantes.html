@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#29478c">
+<title>Portal Estudiantes | U.E. Técnico Humanístico Franz Tamayo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>tailwind.config={darkMode:'class',theme:{extend:{colors:{navy:{50:'#f0f3fa',100:'#dbe2f0',500:'#29478c',700:'#29478c',800:'#29478c',900:'#20386f',950:'#15264d'},gold:{400:'#eb9b45',500:'#eb9b45',600:'#d62832'},bth:{green:'#059669',teal:'#0d9488'}},fontFamily:{sans:['Inter','sans-serif'],display:['Poppins','sans-serif']}}}};</script>
+<style>
+/* CSS propio de estudiantes.html integrado en este archivo */
+
+        /* Custom Canva & ArtCraft Scrollbars & Animations */
+
+:root {
+  --ft-blue: #29478c;
+  --ft-beige: #d1c4b4;
+  --ft-red: #d62832;
+  --ft-orange: #eb9b45;
+  --ft-mauve: #9e7c75;
+  --ft-ink: #182642;
+  --ft-paper: #f7f5f2;
+}
+html { scroll-behavior: smooth; }
+body { background-color: var(--ft-paper); }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 3px solid var(--ft-orange) !important;
+  outline-offset: 3px;
+}
+.sidebar-transition { transition: width .28s ease, transform .28s ease, opacity .2s ease; }
+@media (min-width: 768px) {
+  #mainSidebar.sidebar-collapsed {
+    width: 0 !important; min-width: 0 !important; flex-basis: 0 !important;
+    overflow: hidden; border-right-width: 0 !important; opacity: 0; pointer-events: none;
+  }
+}
+#toggleSidebarBtn { border: 1px solid rgba(209,196,180,.25); }
+#toggleSidebarBtn:hover { background: var(--ft-red); color: #fff; }
+.artcraft-glow { transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, border-color .28s ease; }
+.artcraft-glow:hover { transform: translateY(-5px); box-shadow: 0 18px 35px rgba(41,71,140,.16); border-color: rgba(235,155,69,.7); }
+#privacyModeButton { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+#privacyModeButton:hover, #privacyModeButton:focus-visible { transform: translateY(-2px); border-color: #fcd34d; box-shadow: 0 0 0 2px rgba(251,191,36,.28), 0 0 18px rgba(251,191,36,.55); outline: none; }
+#privacyModeButton:hover > div, #privacyModeButton:focus-visible > div { background-color: #fbbf24; color: #0f172a; box-shadow: 0 0 12px rgba(251,191,36,.8); }
+#privacyModeButton [data-lucide="pause"], #privacyModeButton [data-lucide="eye-off"] { transition: transform .2s ease; }
+#privacyModeButton:hover [data-lucide="eye-off"], #privacyModeButton:focus-visible [data-lucide="eye-off"] { transform: scale(1.12); }
+@media (prefers-reduced-motion: reduce) { #privacyModeButton, #privacyModeButton [data-lucide="pause"], #privacyModeButton [data-lucide="eye-off"] { transition: none; } #privacyModeButton:hover, #privacyModeButton:focus-visible { transform: none; } }
+.page-section.active { animation: pageEnter .36s ease both; }
+.section-entry { display: flex; flex-direction: column; gap: 2.5rem; }
+.repository-layout { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); min-height: 0; }
+.repository-subject-list { max-height: 100%; overflow-y: auto; }
+.repository-resource-list { min-height: 0; overflow-y: auto; }
+.repository-subject-button[aria-current="true"] { background: var(--ft-blue); color: #fff; border-color: var(--ft-blue); }
+.repository-resource-card summary { cursor: pointer; list-style: none; }
+.repository-resource-card summary::-webkit-details-marker { display: none; }
+.repository-tab { border-radius: .75rem .75rem 0 0; transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+.repository-tab[aria-selected="true"], .repository-tab[aria-selected="true"]:hover { border-color: var(--ft-blue); background: var(--ft-blue); color: #fff; }
+.dark .repository-tab[aria-selected="true"], .dark .repository-tab[aria-selected="true"]:hover { border-color: #fbbf24; background: #fbbf24; color: #15264d; }
+.repository-tab:focus-visible { outline: 3px solid var(--ft-orange); outline-offset: -3px; }
+.notification-panel { position: fixed; top: 4.5rem; right: .75rem; width: min(22rem, calc(100vw - 1.5rem)); max-height: calc(100vh - 5.25rem); z-index: 40; transform-origin: top right; }
+.notification-panel[hidden] { display: none; }
+#notificationBadge[hidden] { display: none; }
+.notification-item[data-read="true"] { opacity: .72; }
+.repository-cover-fallback { background: linear-gradient(135deg, #fef3c7, #cbd5e1); }
+.dark .repository-cover-fallback { background: linear-gradient(135deg, #334155, #0f172a); }
+.game-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; }
+.game-memory-card { aspect-ratio: 1; display: grid; place-items: center; border-radius: .75rem; border: 1px solid #dbe2f0; background: #f0f3fa; font-size: 1.5rem; font-weight: 700; color: #29478c; transition: transform .18s ease, background-color .18s ease; }
+.game-memory-card:hover:not(:disabled) { transform: translateY(-2px); }
+.game-memory-card[data-revealed="true"], .game-memory-card[data-matched="true"] { background: #29478c; color: white; }
+.dark .game-memory-card { border-color: #334155; background: #1e293b; color: #fbbf24; }
+.dark .game-memory-card[data-revealed="true"], .dark .game-memory-card[data-matched="true"] { background: #fbbf24; color: #15264d; }
+.game-color-button { min-height: 3.25rem; border-radius: .9rem; border: 2px solid rgba(15,23,42,.12); transition: filter .15s ease, transform .15s ease; }
+.game-color-button:active, .game-color-button.is-lit { filter: brightness(1.35); transform: scale(.96); }
+.riddle-answer-correct { border-color: #86efac !important; background-color: #dcfce7 !important; color: #14532d !important; animation: answer-correct-glow .9s ease-in-out infinite alternate; }
+.riddle-answer-incorrect { border-color: #f87171 !important; background-color: #fee2e2 !important; color: #991b1b !important; animation: answer-incorrect-glow .55s ease-in-out infinite alternate; }
+.dark .riddle-answer-correct { border-color: #4ade80 !important; background-color: #14532d !important; color: #dcfce7 !important; }
+.dark .riddle-answer-incorrect { border-color: #f87171 !important; background-color: #7f1d1d !important; color: #fee2e2 !important; }
+.game-status-feedback { width: fit-content; max-width: 100%; border-radius: .6rem; padding: .35rem .55rem; font-weight: 700; }
+.game-status-feedback[data-feedback="correct"] { background-color: #dcfce7; color: #166534; animation: answer-correct-glow .9s ease-in-out infinite alternate; }
+.game-status-feedback[data-feedback="incorrect"] { background-color: #fee2e2; color: #991b1b; animation: answer-incorrect-glow .55s ease-in-out infinite alternate; }
+.dark .game-status-feedback[data-feedback="correct"] { background-color: #14532d; color: #dcfce7; }
+.dark .game-status-feedback[data-feedback="incorrect"] { background-color: #7f1d1d; color: #fee2e2; }
+@keyframes answer-correct-glow { from { box-shadow: 0 0 0 0 rgba(74,222,128,.25); } to { box-shadow: 0 0 18px 5px rgba(74,222,128,.65); } }
+@keyframes answer-incorrect-glow { from { box-shadow: 0 0 0 0 rgba(239,68,68,.25); } to { box-shadow: 0 0 16px 4px rgba(239,68,68,.65); } }
+@media (prefers-reduced-motion: reduce) { .riddle-answer-correct, .riddle-answer-incorrect, .game-status-feedback { animation: none !important; } }
+.word-grid { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: .25rem; max-width: 22rem; margin-inline: auto; }
+.word-cell { aspect-ratio: 1; display: grid; place-items: center; border-radius: .375rem; background: #f1f5f9; font-size: .75rem; font-weight: 700; color: #334155; }
+.word-cell[data-selected="true"], .word-cell[data-found="true"] { background: #dbeafe; color: #1d4ed8; }
+.dark .word-cell { background: #1e293b; color: #e2e8f0; }
+.dark .word-cell[data-selected="true"], .dark .word-cell[data-found="true"] { background: #1e3a8a; color: #bfdbfe; }
+@media (max-width: 767px) {
+  .repository-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .repository-subject-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; max-height: 190px; }
+  .word-grid { max-width: 100%; }
+}
+.section-entry > * { animation: sectionRise .8s cubic-bezier(.2,.75,.25,1) both; }
+.section-entry > :nth-child(1) { animation-delay: .05s; }
+.section-entry > :nth-child(2) { animation-delay: .17s; }
+.section-entry > :nth-child(3) { animation-delay: .29s; }
+.section-entry > :nth-child(4) { animation-delay: .41s; }
+.section-entry > :nth-child(5) { animation-delay: .53s; }
+.section-entry > :nth-child(6) { animation-delay: .65s; }
+.section-entry > :nth-child(7) { animation-delay: .77s; }
+.section-banner { --section-parallax: 0px; min-height: 270px; background-size: cover; background-position: center calc(50% + var(--section-parallax)); }
+.section-banner-content > * { animation: sectionRise .7s cubic-bezier(.2,.75,.25,1) both; }
+.section-banner-content > :nth-child(1) { animation-delay: .16s; }
+.section-banner-content > :nth-child(2) { animation-delay: .28s; }
+.section-banner-content > :nth-child(3) { animation-delay: .4s; }
+.section-banner-title { animation: sectionRise .7s cubic-bezier(.2,.75,.25,1) both, sectionTitleGlow 4s ease-in-out 1s infinite; }
+.walking-title-word { display: inline-block; white-space: nowrap; }
+.walking-title-letter { display: inline-block; opacity: 0; transform: translate3d(0,.45em,0) rotate(-8deg); transform-origin: 50% 100%; animation: walkingTitleStep .38s cubic-bezier(.22,.75,.25,1) both; animation-delay: calc(var(--step) * 28ms); }
+@keyframes sectionRise { from { opacity: 0; translate: 0 22px; filter: blur(4px); } to { opacity: 1; translate: 0 0; filter: blur(0); } }
+@keyframes sectionTitleGlow { 0%, 100% { text-shadow: 0 0 0 rgba(235,155,69,0); } 50% { text-shadow: 0 0 16px rgba(235,155,69,.48); } }
+@keyframes walkingTitleStep { 0% { opacity: 0; transform: translate3d(0,.45em,0) rotate(-8deg); } 65% { opacity: 1; transform: translate3d(0,-.12em,0) rotate(3deg); } 100% { opacity: 1; transform: translate3d(0,0,0) rotate(0); } }
+@keyframes pageEnter { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+.interactive-banner { isolation: isolate; min-height: 220px; }
+.interactive-banner::after {
+  content: ""; position: absolute; inset: auto -5% -55% auto; width: 260px; height: 260px;
+  border: 1px solid rgba(255,255,255,.22); border-radius: 48% 52% 62% 38%;
+  transform: rotate(-24deg); pointer-events: none; z-index: 0;
+}
+.infinite-carousel-track { will-change: transform; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+  .section-entry > *, .section-banner-content > * { animation: none !important; opacity: 1 !important; translate: none !important; filter: none !important; }
+  .walking-title-letter { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+@media (max-width: 767px) {
+  #mainSidebar { max-width: min(82vw, 320px); }
+  .section-banner { min-height: 290px; }
+  .section-entry { gap: 2rem; }
+  #contentArea { padding: 14px !important; }
+}
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(10px);
+        }
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Glassmorphism effects inspired by ArtCraft */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* ArtCraft Interactive Glow Card */
+        .artcraft-glow {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .artcraft-glow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px -10px rgba(37, 75, 161, 0.3);
+        }
+        .dark .artcraft-glow:hover {
+            box-shadow: 0 14px 30px -10px rgba(217, 119, 6, 0.25);
+        }
+
+        /* Infinite Seamless Moving Carousel (Extremes to Extremes) */
+        @keyframes scrollSeamless {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .infinite-carousel-track {
+            display: flex;
+            width: max-content;
+            animation: scrollSeamless 30s linear infinite;
+        }
+
+        .infinite-carousel-container:hover .infinite-carousel-track {
+            animation-play-state: paused;
+        }
+
+        /* Pulse glow for AI Button */
+        @keyframes aiGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.5), 0 0 30px rgba(37, 75, 161, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(217, 119, 6, 0.8), 0 0 45px rgba(37, 75, 161, 0.6); }
+        }
+        .ai-btn-glow {
+            animation: aiGlow 3s infinite ease-in-out;
+        }
+    
+/* Multi-page navigation refinements */
+.page-section { display:block !important; opacity:1 !important; transform:none !important; }
+#mainSidebar { transition: width .28s ease, transform .28s ease, opacity .2s ease; }
+@media (max-width:767px) { #mainSidebar { position:absolute; inset:0 auto 0 0; height:100%; } body.menu-open::after { content:""; position:fixed; inset:64px 0 0; background:rgba(10,18,35,.38); z-index:15; } }
+.interactive-banner { background-size:cover; background-position:center; }
+
+</style>
+</head>
+<body data-page="estudiantes" class="h-full flex flex-col font-sans text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 antialiased overflow-hidden transition-colors duration-300">
+<div class="fixed inset-0 z-[100] hidden cursor-pointer select-none items-center justify-center overflow-hidden bg-slate-950 text-white" id="privacyScreen" role="dialog" aria-modal="true" aria-label="Pantalla de privacidad" aria-describedby="privacyScreenHint" tabindex="-1" onclick="dismissPrivacyScreen()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();dismissPrivacyScreen()}">
+<div class="pointer-events-none absolute inset-0 bg-cover bg-center" id="privacyBackgroundImage" aria-hidden="true"></div>
+<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-slate-950/70 via-indigo-950/60 to-slate-900/70"></div>
+<div class="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-amber-400/20 blur-3xl"></div>
+<div class="pointer-events-none absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-indigo-400/20 blur-3xl"></div>
+<div class="pointer-events-none absolute inset-0 opacity-[.08]" style="background-image:linear-gradient(135deg,transparent 48%,#fff 49%,#fff 50%,transparent 51%);background-size:48px 48px"></div>
+<div class="pointer-events-none relative mx-6 max-w-lg rounded-3xl border border-white/15 bg-white/[.07] px-8 py-10 text-center shadow-2xl backdrop-blur-xl sm:px-14">
+<div class="mx-auto mb-5 h-1 w-14 rounded-full bg-gradient-to-r from-amber-300 to-emerald-300"></div>
+<p class="mb-3 text-xs font-bold uppercase tracking-[.28em] text-amber-200">U.E. Franz Tamayo · Río Seco</p>
+<h2 class="font-display text-2xl font-bold sm:text-3xl">Pantalla protegida</h2>
+<p class="mt-3 text-sm text-slate-300" id="privacyScreenHint">Toca o haz clic en cualquier parte para volver a tu página.</p>
+<p class="mt-6 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Modo privacidad</p>
+</div>
+</div>
+<script>
+(() => {
+  const PRIVACY_BACKGROUND_IMAGES = [
+    // Agrega rutas de imágenes, por ejemplo: 'assets/pausa-fondo.jpg'
+  ];
+  function initializePrivacyScreen() {
+    const screen = document.getElementById('privacyScreen');
+    const trigger = document.getElementById('privacyModeButton');
+    if (!screen || !trigger) return;
+    let inertStates = [];
+    const backgroundImage = document.getElementById('privacyBackgroundImage');
+    function setPrivacyBackground() {
+      if (!backgroundImage || !PRIVACY_BACKGROUND_IMAGES.length) return;
+      const image = PRIVACY_BACKGROUND_IMAGES[Math.floor(Math.random() * PRIVACY_BACKGROUND_IMAGES.length)];
+      backgroundImage.style.backgroundImage = `url("${image.replace(/"/g, '\\"')}")`;
+    }
+    function closePrivacyScreen() {
+      screen.classList.add('hidden');
+      screen.classList.remove('flex');
+      trigger.setAttribute('aria-pressed', 'false');
+      inertStates.forEach(({ element, wasInert }) => { element.inert = wasInert; });
+      inertStates = [];
+      trigger.focus({ preventScroll: true });
+    }
+    window.togglePrivacyScreen = function () {
+      setPrivacyBackground();
+      screen.classList.remove('hidden');
+      screen.classList.add('flex');
+      trigger.setAttribute('aria-pressed', 'true');
+      inertStates = Array.from(document.body.children)
+        .filter(element => element !== screen)
+        .map(element => ({ element, wasInert: element.inert }));
+      inertStates.forEach(({ element }) => { element.inert = true; });
+      screen.focus({ preventScroll: true });
+    };
+    window.dismissPrivacyScreen = closePrivacyScreen;
+    screen.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closePrivacyScreen();
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePrivacyScreen, { once: true });
+  } else {
+    initializePrivacyScreen();
+  }
+})();
+</script>
+<header class="h-16 bg-navy-900 dark:bg-slate-900 text-white flex items-center justify-between px-4 z-30 shadow-lg border-b border-navy-800 dark:border-slate-800 flex-shrink-0">
+<div class="flex items-center gap-3">
+<!-- Toggle Sidebar Mobile/Desktop -->
+<button class="p-2 rounded-xl hover:bg-navy-800 dark:hover:bg-slate-800 text-slate-200 transition" id="toggleSidebarBtn" title="Plegar/Desplegar Menú">
+<i class="w-5 h-5" data-lucide="panel-left"></i>
+</button>
+<!-- History Back / Forward Controls -->
+
+
+
+
+
+
+
+<!-- Brand Logo & Title -->
+<!-- LOGOTIPO INSTITUCIONAL -->
+<div
+  class="w-10 h-10 flex items-center justify-center
+         flex-shrink-0 overflow-hidden"
+>
+  <img
+    src="img/logo.jpg"
+    alt="Logotipo de la U.E. Franz Tamayo"
+    class="w-full h-full object-contain"
+  >          
+</div>
+
+
+
+
+
+
+
+<div class="hidden md:block">
+<h1 class="font-display font-extrabold text-sm leading-tight text-white tracking-wide">U.E. Franz Tamayo</h1>
+<p class="text-[11px] text-amber-300 font-medium">Rio Seco • SIE: 40730635 | El Alto 2026</p>
+</div>
+</div>
+</div>
+<!-- Global Search Bar -->
+<div class="flex-1 max-w-md mx-4 hidden md:block">
+<div class="relative">
+<i class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" data-lucide="search"></i>
+<input class="w-full bg-navy-800/90 dark:bg-slate-800/90 text-xs text-white placeholder-slate-400 pl-9 pr-4 py-2 rounded-xl border border-navy-700 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition" id="globalSearchInput" onkeyup="handleGlobalSearch()" placeholder="Buscar avisos, módulos BTH, planteles, trámites..." type="text"/>
+</div>
+</div>
+<!-- Right Header Action Controls (AI Button, Theme Toggle, Notifications, User Badge) -->
+<div class="flex items-center gap-2 sm:gap-3">
+<!-- BOTÓN IA (ArtCraft Assistant) -->
+<button class="ai-btn-glow bg-gradient-to-r from-amber-500 via-gold-500 to-navy-500 hover:from-amber-600 hover:to-navy-600 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-2 transition shadow-md" onclick="openModal('aiModal')">
+<i class="w-4 h-4 text-yellow-200 animate-spin" data-lucide="sparkles"></i>
+<span class="hidden sm:inline">IA Tamayita</span>
+</button>
+<!-- DARK MODE / LIGHT MODE INCLUSION TOGGLE BUTTON -->
+<button class="p-2 rounded-xl bg-navy-800/80 dark:bg-slate-800 text-amber-400 dark:text-amber-300 hover:bg-navy-700 dark:hover:bg-slate-700 transition" id="themeToggleBtn" onclick="toggleDarkMode()" title="Cambiar Modo Claro/Oscuro">
+<i class="w-5 h-5 hidden dark:block" data-lucide="sun"></i>
+<i class="w-5 h-5 block dark:hidden" data-lucide="moon"></i>
+</button>
+<!-- Notifications Button and compact dropdown -->
+<div class="relative" id="notificationsControl">
+<button class="relative p-2 rounded-xl bg-navy-800/80 dark:bg-slate-800 text-slate-200 transition hover:bg-navy-700 dark:hover:bg-slate-700" id="notificationsButton" type="button" aria-label="Notificaciones" aria-expanded="false" aria-controls="notificationsPanel" onclick="toggleNotifications()">
+<i class="pointer-events-none w-5 h-5" data-lucide="bell"></i>
+<span class="pointer-events-none absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold leading-none text-white" id="notificationBadge" aria-label="2 notificaciones sin leer">2</span>
+</button>
+<section class="notification-panel overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900" id="notificationsPanel" aria-label="Notificaciones recientes" aria-live="polite" hidden>
+<div class="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+<div><h2 class="text-sm font-bold text-navy-900 dark:text-white">Notificaciones</h2><p class="text-[10px] text-slate-500 dark:text-slate-400" id="notificationSummary">Tienes 2 avisos sin leer</p></div>
+<button class="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white" type="button" onclick="closeNotifications(true)" aria-label="Cerrar notificaciones"><i class="h-4 w-4" data-lucide="x"></i></button>
+</div>
+<div class="max-h-[min(55vh,22rem)] space-y-2 overflow-y-auto p-3">
+<button class="notification-item flex w-full items-start gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-left transition hover:border-navy-100 hover:bg-navy-50 dark:border-slate-800 dark:bg-slate-800/60 dark:hover:bg-slate-800" type="button" data-read="false" onclick="markNotificationRead(this)">
+<span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-rose-500" data-notification-indicator aria-hidden="true"></span><span class="min-w-0 flex-1"><span class="block text-xs font-semibold text-slate-800 dark:text-slate-100">Publicación de Horarios BTH</span><span class="mt-1 block text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">Ya puedes consultar los horarios de las especialidades técnicas.</span><span class="mt-1.5 block text-[10px] text-slate-400">Hace 2 horas</span></span>
+</button>
+<button class="notification-item flex w-full items-start gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-left transition hover:border-navy-100 hover:bg-navy-50 dark:border-slate-800 dark:bg-slate-800/60 dark:hover:bg-slate-800" type="button" data-read="false" onclick="markNotificationRead(this)">
+<span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-rose-500" data-notification-indicator aria-hidden="true"></span><span class="min-w-0 flex-1"><span class="block text-xs font-semibold text-slate-800 dark:text-slate-100">Inscripciones al Torneo de Robótica</span><span class="mt-1 block text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">Inscripciones abiertas para estudiantes interesados.</span><span class="mt-1.5 block text-[10px] text-slate-400">Ayer</span></span>
+</button>
+</div>
+<div class="flex justify-between border-t border-slate-100 px-4 py-3 dark:border-slate-800">
+<button class="text-[11px] font-semibold text-slate-500 transition hover:text-navy-800 dark:hover:text-amber-300" type="button" onclick="markAllNotificationsRead()">Marcar todo como leído</button>
+<button class="text-[11px] font-bold text-navy-800 transition hover:text-navy-600 dark:text-amber-400 dark:hover:text-amber-300" type="button" onclick="closeNotifications(true)">Cerrar</button>
+</div>
+</section>
+</div>
+<div class="h-6 w-px bg-navy-800 dark:bg-slate-800 hidden sm:block"></div>
+<!-- Simulated Location/Campus Tag -->
+<button class="group flex items-center gap-2 bg-navy-800/80 dark:bg-slate-800/80 hover:bg-navy-800 hover:border-amber-300 hover:ring-2 hover:ring-amber-400/50 hover:shadow-[0_0_18px_rgba(251,191,36,0.65)] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 p-1.5 rounded-xl border border-navy-700 dark:border-slate-700 cursor-pointer transition duration-200" id="privacyModeButton" type="button" aria-label="Activar pausa" aria-controls="privacyScreen" aria-pressed="false" title="Pausa" onclick="togglePrivacyScreen()">
+<div class="w-7 h-7 rounded-lg bg-bth-green group-hover:bg-amber-400 group-hover:text-navy-950 group-hover:shadow-[0_0_12px_rgba(251,191,36,0.8)] flex items-center justify-center text-xs font-bold text-white shadow transition duration-200">
+<i class="w-4 h-4 transition-transform duration-200 group-hover:hidden group-focus-visible:hidden" data-lucide="pause"></i>
+<i class="hidden w-4 h-4 transition-transform duration-200 group-hover:block group-focus-visible:block group-hover:scale-110 group-focus-visible:scale-110" data-lucide="eye-off"></i>
+                </div>
+<span class="text-xs font-medium text-slate-200 hidden sm:inline pr-1">Pausa</span>
+</button>
+</div>
+</header>
+<div class="flex-1 flex overflow-hidden relative">
+<aside class="sidebar-transition w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 flex-shrink-0 absolute md:relative h-full shadow-xl md:shadow-none -translate-x-full md:translate-x-0" id="mainSidebar">
+<!-- Navigation Links -->
+<div class="p-3 space-y-1.5 flex-1 overflow-y-auto">
+<div class="px-3 py-2 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                    Navegación Principal
+                </div>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group active" data-page="inicio" href="index.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="layout-dashboard"></i>
+<span class="sidebar-text flex-1">Inicio</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="academico" href="academico.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="graduation-cap"></i>
+<span class="sidebar-text flex-1">Académico &amp; BTH</span>
+<span class="sidebar-text bg-bth-green/10 text-bth-green font-bold text-[10px] px-2 py-0.5 rounded-full">BTH</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="noticias" href="noticias.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="newspaper"></i>
+<span class="sidebar-text flex-1">Noticias &amp; Avisos</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="estudiantes" href="estudiantes.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="users"></i>
+<span class="sidebar-text flex-1">Portal Estudiantes</span>
+</a>
+<div class="px-3 pt-4 pb-2 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider sidebar-text">
+                    Institucional
+                </div>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="institucion" href="institucion.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="building-2"></i>
+<span class="sidebar-text flex-1">Nuestra Institución</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="galeria" href="galeria.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="image"></i>
+<span class="sidebar-text flex-1">Galería de Fotos</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="contacto" href="contacto.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="phone-call"></i>
+<span class="sidebar-text flex-1">Contacto</span>
+</a>
+</div>
+<!-- Quick BTH Promo Box in Sidebar -->
+<div class="p-3 sidebar-text">
+<div class="bg-gradient-to-br from-navy-900 to-navy-800 dark:from-slate-800 dark:to-slate-900 text-white rounded-2xl p-3.5 shadow-md text-xs border border-navy-700/60 dark:border-slate-700">
+<div class="flex items-center gap-2 font-bold text-amber-400 mb-1">
+<i class="w-4 h-4" data-lucide="award"></i>
+<span>BTH Rio Seco 2026</span>
+</div>
+<p class="text-[11px] text-slate-300 mb-3">Formación técnico-humanística de alto impacto laboral.</p>
+<button class="w-full bg-gold-500 hover:bg-gold-600 text-navy-950 font-bold py-1.5 px-3 rounded-xl text-[11px] transition text-center shadow" type="button" onclick="openTechnicalOffer()">
+                        Ver Oferta Técnica
+                    </button>
+</div>
+</div>
+<!-- Footer Sidebar Info -->
+<div class="p-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 text-center sidebar-text">
+                U.E. Franz Tamayo © 2026
+            </div>
+</aside>
+<main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-4 md:p-6 lg:p-8 relative" id="contentArea">
+<section class="section-entry" id="estudiantes">
+<!-- HEADER BANNER FOR ESTUDIANTES -->
+<div class="section-banner relative rounded-3xl overflow-hidden bg-gradient-to-r from-navy-900 via-indigo-900 to-navy-950 text-white p-5 md:p-6 shadow-xl border border-navy-700/50">
+<div class="section-banner-content max-w-2xl space-y-2">
+<span class="text-xs font-bold px-3 py-1 bg-emerald-500 text-navy-950 rounded-full inline-block">Portal del Estudiante Tamayino</span>
+<h2 class="section-banner-title walking-title font-display text-2xl font-bold">Servicios Académicos y Biblioteca Digital</h2>
+<p class="text-xs text-slate-300">Descarga reglamentos, horarios de tutorías, formularios de licencia y preguntas frecuentes.</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200/80 dark:border-slate-800 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Downloads -->
+<div class="space-y-4">
+<h3 class="font-bold text-sm text-navy-900 dark:text-amber-400 flex items-center gap-2">
+<i class="w-4 h-4 text-gold-500" data-lucide="download"></i> Descargas Directas
+                            </h3>
+<div class="space-y-2 text-xs">
+<a class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-navy-500 dark:hover:border-amber-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition" href="javascript:void(0)" onclick="showToast('Descargando Reglamento Interno (PDF)')">
+<span class="font-medium text-slate-700 dark:text-slate-200">Reglamento Interno de Convivencia</span>
+<i class="w-4 h-4 text-slate-400" data-lucide="file-text"></i>
+</a>
+<a class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-navy-500 dark:hover:border-amber-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition" href="javascript:void(0)" onclick="showToast('Descargando Horario de Clases (PDF)')">
+<span class="font-medium text-slate-700 dark:text-slate-200">Horario Oficial de Clases 2026</span>
+<i class="w-4 h-4 text-slate-400" data-lucide="calendar"></i>
+</a>
+<a class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-navy-500 dark:hover:border-amber-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition" href="javascript:void(0)" onclick="showToast('Formulario de Licencia generado')">
+<span class="font-medium text-slate-700 dark:text-slate-200">Formulario de Licencia/Justificación</span>
+<i class="w-4 h-4 text-slate-400" data-lucide="edit-3"></i>
+</a>
+</div>
+</div>
+<!-- Tutoring Schedule -->
+<div class="space-y-4">
+<h3 class="font-bold text-sm text-navy-900 dark:text-amber-400 flex items-center gap-2">
+<i class="w-4 h-4 text-emerald-500" data-lucide="user-check"></i> Horarios de Apoyo y Refuerzo
+                            </h3>
+<div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3 text-xs">
+<div class="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-700">
+<span class="font-semibold text-slate-800 dark:text-slate-200">Refuerzo de Matemáticas</span>
+<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">Miér. 14:00</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-700">
+<span class="font-semibold text-slate-800 dark:text-slate-200">Asesoría Proyectos BTH</span>
+<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">Juev. 15:00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-semibold text-slate-800 dark:text-slate-200">Orientación Vocacional</span>
+<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">Vier. 10:00</span>
+</div>
+</div>
+</div>
+<!-- Digital Library Promo Box -->
+<div class="bg-gradient-to-br from-navy-900 to-navy-800 dark:from-slate-800 dark:to-slate-900 text-white p-5 rounded-2xl flex flex-col justify-between border border-navy-700 dark:border-slate-700">
+<div>
+<i class="w-8 h-8 text-gold-400 mb-3" data-lucide="book-open-check"></i>
+<h3 class="font-bold text-sm">Biblioteca Digital Escolar</h3>
+<p class="text-xs text-slate-300 mt-2">Consulta guías de apoyo, portadas de libros y videos educativos organizados por materia.</p>
+</div>
+<button class="mt-4 w-full bg-gold-500 hover:bg-gold-600 text-navy-950 font-bold py-2 rounded-xl text-xs transition shadow" onclick="openRepository()">
+                                Acceder a Repositorio Digital
+                            </button>
+</div>
+</div>
+<!-- FAQ Section Accordion -->
+<div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+<h3 class="font-bold text-sm text-navy-900 dark:text-amber-400 mb-3">Preguntas Frecuentes (FAQ)</h3>
+<div class="space-y-2 text-xs">
+<details class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer">
+<summary class="font-semibold text-slate-800 dark:text-slate-200">¿Cuáles son los requisitos para la obtención del Título Técnico Medio BTH?</summary>
+<p class="text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">Haber aprobado los módulos BTH de 4to a 6to de secundaria, haber completado las horas prácticas y presentar el proyecto socio-productivo final.</p>
+</details>
+<details class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer">
+<summary class="font-semibold text-slate-800 dark:text-slate-200">¿Cómo justifico una inasistencia por motivos de salud?</summary>
+<p class="text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">Debe descargar el formulario de licencia, adjuntar el certificado médico o nota firmada por el tutor y presentarlo en secretaría en un plazo no mayor a 48 horas.</p>
+</details>
+</div>
+</div>
+<section class="space-y-5 border-t border-slate-100 pt-6 dark:border-slate-800" aria-labelledby="studentGamesTitle">
+<div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+<div><span class="inline-flex items-center gap-1.5 rounded-full bg-violet-100 px-2.5 py-1 text-[10px] font-bold text-violet-800 dark:bg-violet-400/10 dark:text-violet-300"><i class="h-3 w-3" data-lucide="gamepad-2" aria-hidden="true"></i>Aprende jugando</span><h3 class="mt-2 font-display text-lg font-bold text-navy-900 dark:text-white" id="studentGamesTitle">Pausa activa: juegos para pensar y crear</h3><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Entrena la memoria, practica la observación y despierta nuevas ideas con retos cortos.</p></div>
+<span class="text-[10px] text-slate-400">Juegos gratuitos · No guardan datos personales</span>
+</div>
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+<article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900" aria-labelledby="memoryGameTitle">
+<div class="mb-3 flex items-center justify-between gap-3"><div><h4 class="text-sm font-bold text-navy-900 dark:text-white" id="memoryGameTitle">Memoria de ideas</h4><p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Encuentra los cuatro pares iguales.</p></div><i class="h-5 w-5 text-violet-500" data-lucide="brain" aria-hidden="true"></i></div>
+<div class="game-grid" id="memoryGameBoard" aria-label="Juego de memoria"></div>
+<div class="mt-3 flex items-center justify-between gap-3"><p class="text-[11px] text-slate-500 dark:text-slate-400" id="memoryGameStatus" aria-live="polite">Parejas encontradas: 0 de 4</p><button class="rounded-lg bg-violet-100 px-3 py-2 text-[11px] font-bold text-violet-900 hover:bg-violet-200 dark:bg-violet-400/15 dark:text-violet-200" id="memoryGameReset" type="button">Reiniciar</button></div>
+</article>
+<article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900" aria-labelledby="puzzleGameTitle">
+<div class="mb-3 flex items-center justify-between gap-3"><div><h4 class="text-sm font-bold text-navy-900 dark:text-white" id="puzzleGameTitle">Rompecabezas numérico</h4><p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Ordena las fichas del 1 al 8; toca una ficha junto al espacio vacío para moverla.</p></div><i class="h-5 w-5 text-sky-500" data-lucide="puzzle" aria-hidden="true"></i></div>
+<div class="mx-auto grid w-full max-w-[15rem] grid-cols-3 gap-2" id="numberPuzzleBoard" aria-label="Rompecabezas deslizante"></div>
+<div class="mt-3 flex items-center justify-between gap-3"><p class="text-[11px] text-slate-500 dark:text-slate-400" id="numberPuzzleStatus" aria-live="polite">¡Encuentra el orden correcto!</p><button class="rounded-lg bg-sky-100 px-3 py-2 text-[11px] font-bold text-sky-900 hover:bg-sky-200 dark:bg-sky-400/15 dark:text-sky-200" id="numberPuzzleReset" type="button">Mezclar</button></div>
+</article>
+<article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900" aria-labelledby="riddleGameTitle">
+<div class="mb-3 flex items-center justify-between gap-3"><div><h4 class="text-sm font-bold text-navy-900 dark:text-white" id="riddleGameTitle">Adivinanzas creativas</h4><p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Piensa diferente y elige una respuesta.</p></div><i class="h-5 w-5 text-amber-500" data-lucide="lightbulb" aria-hidden="true"></i></div>
+<p class="min-h-12 rounded-xl bg-amber-50 p-3 text-xs leading-relaxed text-slate-700 dark:bg-slate-800 dark:text-slate-200" id="riddleQuestion"></p>
+<div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3" id="riddleOptions"></div>
+<p class="mt-3 min-h-5 text-[11px] text-slate-500 dark:text-slate-400" id="riddleStatus" aria-live="polite">¡Tú puedes!</p>
+<button class="mt-2 rounded-lg bg-amber-100 px-3 py-2 text-[11px] font-bold text-amber-900 hover:bg-amber-200 dark:bg-amber-400/15 dark:text-amber-200" id="riddleNext" type="button">Otra adivinanza</button>
+</article>
+<article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900" aria-labelledby="wordSearchTitle">
+<div class="mb-3 flex items-center justify-between gap-3"><div><h4 class="text-sm font-bold text-navy-900 dark:text-white" id="wordSearchTitle">Sopa de letras</h4><p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Toca el inicio y el final de cada palabra en horizontal.</p></div><i class="h-5 w-5 text-emerald-500" data-lucide="scan-search" aria-hidden="true"></i></div>
+<div class="word-grid" id="wordSearchBoard" aria-label="Sopa de letras de ocho columnas"></div>
+<div class="mt-3 flex flex-wrap items-center justify-between gap-2"><p class="text-[11px] text-slate-500 dark:text-slate-400">Busca: <strong class="text-navy-800 dark:text-amber-300">IDEA · ARTE · SOL · PAZ</strong></p><button class="rounded-lg bg-emerald-100 px-3 py-2 text-[11px] font-bold text-emerald-900 hover:bg-emerald-200 dark:bg-emerald-400/15 dark:text-emerald-200" id="wordSearchReset" type="button">Reiniciar</button></div>
+<p class="mt-2 min-h-5 text-[11px] text-slate-500 dark:text-slate-400" id="wordSearchStatus" aria-live="polite">Palabras encontradas: 0 de 4</p>
+</article>
+<article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900 lg:col-span-2" aria-labelledby="colorPatternTitle">
+<div class="mb-3 flex items-center justify-between gap-3"><div><h4 class="text-sm font-bold text-navy-900 dark:text-white" id="colorPatternTitle">Sigue el patrón de colores</h4><p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Observa la secuencia y repítela. Cada ronda agrega un color.</p></div><i class="h-5 w-5 text-rose-500" data-lucide="shapes" aria-hidden="true"></i></div>
+<div class="mx-auto grid max-w-sm grid-cols-2 gap-3" id="colorPatternBoard">
+<button class="game-color-button bg-rose-500 hover:bg-rose-400" type="button" data-pattern-color="0" aria-label="Rojo"></button><button class="game-color-button bg-emerald-500 hover:bg-emerald-400" type="button" data-pattern-color="1" aria-label="Verde"></button><button class="game-color-button bg-sky-500 hover:bg-sky-400" type="button" data-pattern-color="2" aria-label="Azul"></button><button class="game-color-button bg-amber-400 hover:bg-amber-300" type="button" data-pattern-color="3" aria-label="Amarillo"></button>
+</div>
+<div class="mt-3 flex items-center justify-between gap-3"><p class="text-[11px] text-slate-500 dark:text-slate-400" id="colorPatternStatus" aria-live="polite">Pulsa “Comenzar” y observa bien.</p><button class="rounded-lg bg-rose-100 px-3 py-2 text-[11px] font-bold text-rose-900 hover:bg-rose-200 dark:bg-rose-400/15 dark:text-rose-200" id="colorPatternStart" type="button">Comenzar</button></div>
+</article>
+</div>
+<div class="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+<div><h4 class="text-sm font-bold text-navy-900 dark:text-white">Simuladores y recursos para explorar</h4><p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Enlaces externos para practicar ciencias, tecnología, seguridad y creatividad. Algunos servicios pueden pedir cuenta o tener contenido en inglés.</p></div>
+<div class="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+<a class="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-sky-300 hover:bg-sky-50 dark:border-slate-800 dark:hover:bg-slate-800" href="https://phet.colorado.edu/es/simulations/filter?subjects=math&type=html" target="_blank" rel="noopener noreferrer"><i class="mt-0.5 h-4 w-4 text-sky-600" data-lucide="atom" aria-hidden="true"></i><span><strong class="block text-xs text-slate-800 dark:text-slate-100">PhET: matemáticas y ciencias</strong><span class="mt-1 block text-[10px] text-slate-500 dark:text-slate-400">Experimentos y modelos interactivos.</span></span></a>
+<a class="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-indigo-300 hover:bg-indigo-50 dark:border-slate-800 dark:hover:bg-slate-800" href="https://www.tinkercad.com/" target="_blank" rel="noopener noreferrer"><i class="mt-0.5 h-4 w-4 text-indigo-600" data-lucide="cpu" aria-hidden="true"></i><span><strong class="block text-xs text-slate-800 dark:text-slate-100">Tinkercad: circuitos y diseño 3D</strong><span class="mt-1 block text-[10px] text-slate-500 dark:text-slate-400">Prueba electrónica, circuitos y modelado.</span></span></a>
+<a class="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-blue-300 hover:bg-blue-50 dark:border-slate-800 dark:hover:bg-slate-800" href="https://www.netacad.com/courses/packet-tracer" target="_blank" rel="noopener noreferrer"><i class="mt-0.5 h-4 w-4 text-blue-600" data-lucide="network" aria-hidden="true"></i><span><strong class="block text-xs text-slate-800 dark:text-slate-100">Cisco Packet Tracer: redes</strong><span class="mt-1 block text-[10px] text-slate-500 dark:text-slate-400">Diseña y practica redes informáticas.</span></span></a>
+<a class="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-rose-300 hover:bg-rose-50 dark:border-slate-800 dark:hover:bg-slate-800" href="https://www.redcross.org/take-a-class/first-aid/first-aid-training" target="_blank" rel="noopener noreferrer"><i class="mt-0.5 h-4 w-4 text-rose-600" data-lucide="heart-pulse" aria-hidden="true"></i><span><strong class="block text-xs text-slate-800 dark:text-slate-100">Cruz Roja: primeros auxilios</strong><span class="mt-1 block text-[10px] text-slate-500 dark:text-slate-400">Información y formación básica de seguridad.</span></span></a>
+<a class="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-amber-300 hover:bg-amber-50 dark:border-slate-800 dark:hover:bg-slate-800" href="https://store.steampowered.com/app/621060/PC_Building_Simulator/" target="_blank" rel="noopener noreferrer"><i class="mt-0.5 h-4 w-4 text-amber-600" data-lucide="monitor-cog" aria-hidden="true"></i><span><strong class="block text-xs text-slate-800 dark:text-slate-100">PC Building Simulator</strong><span class="mt-1 block text-[10px] text-slate-500 dark:text-slate-400">Simulador de armado de computadoras; puede ser de pago.</span></span></a>
+<a class="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-lime-300 hover:bg-lime-50 dark:border-slate-800 dark:hover:bg-slate-800" href="https://www.culinaryschools.org/kids-games/" target="_blank" rel="noopener noreferrer"><i class="mt-0.5 h-4 w-4 text-lime-600" data-lucide="chef-hat" aria-hidden="true"></i><span><strong class="block text-xs text-slate-800 dark:text-slate-100">Cocina y alimentos: juegos educativos</strong><span class="mt-1 block text-[10px] text-slate-500 dark:text-slate-400">Minijuegos sobre cocina, alimentos y hostelería; el sitio incluye anuncios.</span></span></a>
+<a class="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:border-orange-300 hover:bg-orange-50 dark:border-slate-800 dark:hover:bg-slate-800" href="https://scratch.mit.edu/projects/editor/" target="_blank" rel="noopener noreferrer"><i class="mt-0.5 h-4 w-4 text-orange-600" data-lucide="blocks" aria-hidden="true"></i><span><strong class="block text-xs text-slate-800 dark:text-slate-100">Scratch: crea tus propios juegos</strong><span class="mt-1 block text-[10px] text-slate-500 dark:text-slate-400">Programa historias y proyectos interactivos.</span></span></a>
+</div>
+</div>
+</section>
+</div>
+</section>
+</main>
+</div>
+<div class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/70 backdrop-blur-sm p-2 sm:p-4" id="digitalRepositoryModal" role="dialog" aria-modal="true" aria-labelledby="repositoryTitle">
+<div class="flex h-[96vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900 sm:h-[92vh]">
+<header class="flex items-start justify-between gap-4 border-b border-slate-200 p-4 sm:p-5 dark:border-slate-800">
+<div class="min-w-0"><p class="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400">Biblioteca Digital Escolar</p><h2 class="mt-1 font-display text-lg font-bold text-navy-900 dark:text-white sm:text-xl" id="repositoryTitle">Repositorio por materias</h2><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Explora guías, portadas de libros y videos educativos.</p></div>
+<button class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800" type="button" onclick="closeModal('digitalRepositoryModal')" aria-label="Cerrar repositorio"><i class="w-5 h-5" data-lucide="x"></i></button>
+</header>
+<nav class="flex flex-shrink-0 gap-1 overflow-x-auto border-b border-slate-200 px-3 dark:border-slate-800 sm:px-5" role="tablist" aria-label="Tipo de recurso">
+<button class="repository-tab whitespace-nowrap border-b-2 border-transparent px-3 py-3 text-xs font-semibold text-slate-500 hover:text-navy-800 dark:text-slate-400 dark:hover:text-white" id="repositoryTabGuides" type="button" role="tab" aria-selected="true" aria-controls="repositoryGuidesView" data-repository-tab="guides"><i class="mr-1.5 inline-block h-3.5 w-3.5 align-text-bottom" data-lucide="notebook-pen" aria-hidden="true"></i>Guías</button>
+<button class="repository-tab whitespace-nowrap border-b-2 border-transparent px-3 py-3 text-xs font-semibold text-slate-500 hover:text-navy-800 dark:text-slate-400 dark:hover:text-white" id="repositoryTabBooks" type="button" role="tab" aria-selected="false" aria-controls="repositoryBooksView" data-repository-tab="books"><i class="mr-1.5 inline-block h-3.5 w-3.5 align-text-bottom" data-lucide="book-open" aria-hidden="true"></i>Libros</button>
+<button class="repository-tab whitespace-nowrap border-b-2 border-transparent px-3 py-3 text-xs font-semibold text-slate-500 hover:text-navy-800 dark:text-slate-400 dark:hover:text-white" id="repositoryTabVideos" type="button" role="tab" aria-selected="false" aria-controls="repositoryVideosView" data-repository-tab="videos"><i class="mr-1.5 inline-block h-3.5 w-3.5 align-text-bottom" data-lucide="play-square" aria-hidden="true"></i>Videos</button>
+</nav>
+<div class="flex min-h-0 flex-1 flex-col overflow-hidden" id="repositoryGuidesView" role="tabpanel" aria-labelledby="repositoryTabGuides" tabindex="0">
+<div class="repository-layout flex-1 overflow-hidden">
+<aside class="flex min-h-0 flex-col border-b border-slate-200 p-3 dark:border-slate-800 md:border-b-0 md:border-r sm:p-4">
+<label class="mb-2 text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400" for="repositorySubjectSearch">Buscar materia</label>
+<input class="mb-3 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-navy-500/30 dark:border-slate-700 dark:bg-slate-800 dark:text-white" id="repositorySubjectSearch" placeholder="Escribe una materia..." type="search">
+<nav class="repository-subject-list text-xs" id="repositorySubjectList" aria-label="Materias del repositorio"></nav>
+</aside>
+<section class="repository-resource-list p-4 sm:p-6" aria-label="Recursos de la materia seleccionada">
+<div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+<div><h3 class="font-display text-base font-bold text-navy-900 dark:text-white" id="repositorySubjectTitle">Selecciona una materia</h3><p class="mt-1 text-xs text-slate-500 dark:text-slate-400" id="repositorySubjectDescription"></p></div>
+<label class="flex flex-shrink-0 items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">Curso<select class="rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs dark:border-slate-700 dark:bg-slate-800" id="repositoryGradeFilter"><option value="all">Todos</option><option value="1ro">1ro</option><option value="2do">2do</option><option value="3ro">3ro</option><option value="4to">4to</option><option value="5to">5to</option><option value="6to">6to</option></select></label>
+</div>
+<label class="mb-3 flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 dark:border-slate-700 dark:bg-slate-800"><i class="w-4 h-4 flex-shrink-0 text-slate-400" data-lucide="search" aria-hidden="true"></i><span class="sr-only">Buscar en los recursos</span><input class="w-full bg-transparent py-2 text-xs text-slate-800 outline-none dark:text-white" id="repositoryResourceSearch" placeholder="Buscar guía, ejercicio o tema..." type="search"></label>
+<div class="repository-resource-items space-y-2" id="repositoryResourceList" aria-live="polite"></div>
+<p class="hidden py-8 text-center text-xs text-slate-500 dark:text-slate-400" id="repositoryEmptyState">No hay recursos que coincidan con la búsqueda.</p>
+</section>
+</div>
+</div>
+<section class="hidden min-h-0 flex-1 overflow-y-auto p-4 sm:p-6" id="repositoryBooksView" role="tabpanel" aria-labelledby="repositoryTabBooks" tabindex="0">
+<div class="mb-5"><span class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold text-amber-800 dark:bg-amber-400/10 dark:text-amber-300"><i class="h-3 w-3" data-lucide="library" aria-hidden="true"></i>Biblioteca escolar</span><h3 class="mt-3 font-display text-base font-bold text-navy-900 dark:text-white">Libros y lecturas recomendadas</h3><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Explora temas para reforzar tus materias. Cada ficha incluye una breve orientación y acceso a una búsqueda de libros.</p></div>
+<details class="mb-4 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60">
+<summary class="flex cursor-pointer list-none items-center gap-2 p-4 text-xs font-bold text-navy-900 dark:text-white"><i class="h-4 w-4 text-amber-600 dark:text-amber-300" data-lucide="image-plus" aria-hidden="true"></i>Agregar libro con portada</summary>
+<form class="grid grid-cols-1 gap-3 border-t border-slate-200 p-4 sm:grid-cols-2 dark:border-slate-700" id="repositoryBookForm">
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">Título<input class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="title" required maxlength="100" placeholder="Título del libro"></label>
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">Materia<input class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="subject" required maxlength="60" placeholder="Ej. Matemáticas"></label>
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 sm:col-span-2">Descripción<textarea class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="description" required maxlength="240" rows="2" placeholder="Describe brevemente el contenido"></textarea></label>
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 sm:col-span-2">Enlace del libro (opcional)<input class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="url" type="url" placeholder="https://..."></label>
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">Portada desde archivo<input class="mt-1 block w-full text-[11px] text-slate-500 file:mr-2 file:rounded-lg file:border-0 file:bg-amber-100 file:px-3 file:py-2 file:text-[11px] file:font-bold file:text-amber-900 dark:file:bg-amber-400/15 dark:file:text-amber-200" name="coverFile" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="bookCoverHelp"></label>
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">O pega una URL de portada<input class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="coverUrl" type="url" placeholder="https://...jpg"></label>
+<p class="text-[10px] text-slate-500 dark:text-slate-400 sm:col-span-2" id="bookCoverHelp">Las imágenes deben ser JPG, PNG o WebP y pesar hasta 1 MB. Se guardan solo en este navegador.</p>
+<button class="inline-flex w-fit items-center gap-2 rounded-lg bg-navy-800 px-3 py-2 text-[11px] font-bold text-white hover:bg-navy-900 dark:bg-amber-500 dark:text-navy-950 sm:col-span-2" type="submit"><i class="h-3.5 w-3.5" data-lucide="plus" aria-hidden="true"></i>Guardar libro</button>
+</form>
+</details>
+<label class="mb-4 flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 dark:border-slate-700 dark:bg-slate-800"><i class="w-4 h-4 flex-shrink-0 text-slate-400" data-lucide="search" aria-hidden="true"></i><span class="sr-only">Buscar libros</span><input class="w-full bg-transparent py-2 text-xs text-slate-800 outline-none dark:text-white" id="repositoryBookSearch" type="search" placeholder="Buscar título o materia..."></label>
+<div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3" id="repositoryBookList"></div>
+<p class="hidden py-8 text-center text-xs text-slate-500 dark:text-slate-400" id="repositoryBookEmptyState">No encontramos libros con esa búsqueda. Prueba con otra materia o tema.</p>
+</section>
+<section class="hidden min-h-0 flex-1 overflow-y-auto p-4 sm:p-6" id="repositoryVideosView" role="tabpanel" aria-labelledby="repositoryTabVideos" tabindex="0">
+<div class="mb-5"><span class="inline-flex items-center gap-1.5 rounded-full bg-rose-100 px-2.5 py-1 text-[10px] font-bold text-rose-800 dark:bg-rose-400/10 dark:text-rose-300"><i class="h-3 w-3" data-lucide="circle-play" aria-hidden="true"></i>Aula audiovisual</span><h3 class="mt-3 font-display text-base font-bold text-navy-900 dark:text-white">Videos para aprender a tu ritmo</h3><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Agrega enlaces de YouTube o videos MP4/WebM. En los enlaces compatibles, el avance se reproduce al pasar el cursor o enfocar la tarjeta.</p></div>
+<details class="mb-4 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60">
+<summary class="flex cursor-pointer list-none items-center gap-2 p-4 text-xs font-bold text-navy-900 dark:text-white"><i class="h-4 w-4 text-rose-600 dark:text-rose-300" data-lucide="video" aria-hidden="true"></i>Agregar video desde un enlace</summary>
+<form class="grid grid-cols-1 gap-3 border-t border-slate-200 p-4 sm:grid-cols-2 dark:border-slate-700" id="repositoryVideoForm">
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">Título<input class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="title" required maxlength="100" placeholder="Título del video"></label>
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300">Materia<input class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="subject" required maxlength="60" placeholder="Ej. Física"></label>
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 sm:col-span-2">Descripción<textarea class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="description" required maxlength="240" rows="2" placeholder="¿Qué aprenderán los estudiantes?"></textarea></label>
+<label class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 sm:col-span-2">Enlace de YouTube o archivo MP4/WebM<input class="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" name="url" type="url" required placeholder="https://youtu.be/... o https://.../video.mp4"></label>
+<button class="inline-flex w-fit items-center gap-2 rounded-lg bg-rose-700 px-3 py-2 text-[11px] font-bold text-white hover:bg-rose-800 dark:bg-rose-500 dark:text-slate-950 sm:col-span-2" type="submit"><i class="h-3.5 w-3.5" data-lucide="plus" aria-hidden="true"></i>Guardar video</button>
+</form>
+</details>
+<label class="mb-4 flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 dark:border-slate-700 dark:bg-slate-800"><i class="w-4 h-4 flex-shrink-0 text-slate-400" data-lucide="search" aria-hidden="true"></i><span class="sr-only">Buscar videos</span><input class="w-full bg-transparent py-2 text-xs text-slate-800 outline-none dark:text-white" id="repositoryVideoSearch" type="search" placeholder="Buscar título o materia..."></label>
+<div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3" id="repositoryVideoList"></div>
+<p class="hidden py-8 text-center text-xs text-slate-500 dark:text-slate-400" id="repositoryVideoEmptyState">No encontramos videos con esa búsqueda. Prueba con otra materia o tema.</p>
+</section>
+<footer class="border-t border-slate-200 px-4 py-3 text-[10px] text-slate-500 dark:border-slate-800 dark:text-slate-400 sm:px-5">Materiales de apoyo de ejemplo para consulta. Verifica el contenido oficial con tus docentes.</footer>
+</div>
+</div>
+<div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden items-center justify-center p-4" id="aiModal">
+<div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative animate-in zoom-in-95 duration-200">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white p-1" onclick="closeModal('aiModal')">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<!-- AI Header -->
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-gold-400 text-navy-950 flex items-center justify-center font-bold shadow-lg">
+<i class="w-5 h-5" data-lucide="sparkles"></i>
+</div>
+<div>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white">Asistente Virtual IA Tamayita</h3>
+<p class="text-[11px] text-slate-500 dark:text-slate-400">Consultas sobre BTH, trámites y horarios</p>
+<!-- Chat Log area -->
+<div class="h-56 overflow-y-auto bg-slate-50 dark:bg-slate-800/50 p-3 rounded-2xl border border-slate-200 dark:border-slate-700/80 space-y-3 text-xs" id="aiChatLog">
+<div class="flex gap-2">
+<div class="w-6 h-6 rounded-full bg-gold-500 text-navy-950 flex items-center justify-center font-bold text-[10px] flex-shrink-0">IA</div>
+<div class="bg-white dark:bg-slate-700 p-2.5 rounded-2xl rounded-tl-none shadow-sm text-slate-700 dark:text-slate-100 max-w-[85%]">
+                        ¡Hola! Soy tu asistente de Inteligencia Artificial para la U.E. Franz Tamayo. ¿En qué puedo ayudarte hoy?
+                    </div>
+</div>
+</div>
+<!-- Quick AI Prompt Pills -->
+<div class="flex gap-1.5 overflow-x-auto py-2 text-[10px]">
+<button class="bg-slate-100 dark:bg-slate-800 hover:bg-gold-500 hover:text-navy-950 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium transition" onclick="sendAiQuickPrompt('¿Cuáles son los requisitos de titulación BTH?')">Requisitos BTH</button>
+<button class="bg-slate-100 dark:bg-slate-800 hover:bg-gold-500 hover:text-navy-950 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium transition" onclick="sendAiQuickPrompt('¿Cuándo son los exámenes trimestrales?')">Calendario Exámenes</button>
+<button class="bg-slate-100 dark:bg-slate-800 hover:bg-gold-500 hover:text-navy-950 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium transition" onclick="sendAiQuickPrompt('¿Dónde se ubica la secretaría?')">Ubicación</button>
+</div>
+<!-- AI Input -->
+<div class="flex gap-2 mt-2">
+<input class="flex-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-gold-500/50" id="aiInput" onkeypress="if(event.key==='Enter') sendAiMessage()" placeholder="Escribe tu consulta aquí..." type="text"/>
+<button class="bg-navy-800 dark:bg-amber-500 text-white dark:text-navy-950 px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-navy-900 transition flex items-center justify-center" onclick="sendAiMessage()">
+<i class="w-4 h-4" data-lucide="send"></i>
+</button>
+</div>
+</div>
+</div><div class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4" id="bthSistemasModal">
+<div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1" onclick="closeModal('bthSistemasModal')">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+<i class="w-5 h-5" data-lucide="code"></i>
+</div>
+<div>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white">Módulo BTH: Sistemas Informáticos</h3>
+<p class="text-[11px] text-slate-500">Plan de estudios oficial - Gestión 2026</p>
+</div>
+</div>
+<div class="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+<p><strong>4to de Secundaria:</strong> Arquitectura de hardware, ensamble de computadoras, diseño gráfico digital elemental y lógica de programación.</p>
+<p><strong>5to de Secundaria:</strong> Redes de datos LAN/WLAN, desarrollo de páginas web (HTML, CSS, JS), bases de datos relacionales SQL.</p>
+<p><strong>6to de Secundaria:</strong> Desarrollo de aplicaciones móviles, proyectos socio-productivos de software y defensa de grado técnico medio.</p>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+<button class="bg-navy-800 dark:bg-amber-500 dark:text-navy-950 text-white px-4 py-2 rounded-xl text-xs font-bold" onclick="closeModal('bthSistemasModal')">Cerrar Ventana</button>
+</div>
+</div>
+</div><div class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4" id="bthContabilidadModal">
+<div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1" onclick="closeModal('bthContabilidadModal')">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+<i class="w-5 h-5" data-lucide="calculator"></i>
+</div>
+<div>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white">Módulo BTH: Contabilidad General</h3>
+<p class="text-[11px] text-slate-500">Plan de estudios oficial - Gestión 2026</p>
+</div>
+</div>
+<div class="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+<p><strong>Competencias:</strong> Manejo del ciclo contable completo, balances generales, libros diarios, conciliación bancaria y normativa del SIN boliviano.</p>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+<button class="bg-navy-800 dark:bg-amber-500 dark:text-navy-950 text-white px-4 py-2 rounded-xl text-xs font-bold" onclick="closeModal('bthContabilidadModal')">Cerrar Ventana</button>
+</div>
+</div>
+</div><div class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4" id="demoCalificacionesModal">
+<div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1" onclick="closeModal('demoCalificacionesModal')">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white mb-1">Simulador de Consulta de Calificaciones</h3>
+<p class="text-xs text-slate-500 mb-4">Vista previa de libreta digital - Estudiante Demostración</p>
+<div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3 text-xs">
+<div class="flex justify-between border-b dark:border-slate-700 pb-2">
+<span class="font-bold text-slate-700 dark:text-slate-300">Estudiante:</span>
+<span class="text-slate-900 dark:text-white font-semibold">Mamani Quispe, Joel (6to B)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="dark:text-slate-300">Sistemas Informáticos (BTH):</span>
+<span class="font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">95 / 100</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="dark:text-slate-300">Matemáticas:</span>
+<span class="font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">88 / 100</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="dark:text-slate-300">Física - Química:</span>
+<span class="font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">84 / 100</span>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+<button class="bg-navy-800 dark:bg-amber-500 dark:text-navy-950 text-white px-4 py-2 rounded-xl text-xs font-bold" onclick="closeModal('demoCalificacionesModal')">Cerrar Simulador</button>
+</div>
+</div>
+</div><div class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4" id="lightboxModal" onclick="closeLightbox()">
+<div class="relative max-w-4xl w-full text-center" onclick="event.stopPropagation()">
+<button class="absolute -top-10 right-0 text-white hover:text-slate-300" onclick="closeLightbox()">
+<i class="w-8 h-8" data-lucide="x"></i>
+</button>
+<img alt="Vista Previa" class="max-h-[80vh] mx-auto rounded-xl shadow-2xl border border-slate-800" id="lightboxImg" src=""/>
+<p class="text-white text-xs font-semibold mt-3" id="lightboxCaption"></p>
+</div>
+</div><div class="fixed bottom-5 right-5 bg-navy-950 dark:bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-navy-700 dark:border-slate-700 text-xs flex items-center gap-3 translate-y-20 opacity-0 transition duration-300 z-50" id="toast">
+<i class="w-4 h-4 text-gold-400" data-lucide="info"></i>
+<span id="toastMessage">Notificación</span>
+</div>
+<script>
+/* JavaScript propio de estudiantes.html integrado en este archivo */
+// JavaScript independiente de esta página de la plataforma Franz Tamayo
+(() => {
+  const sidebar = document.getElementById('mainSidebar');
+  const toggleBtn = document.getElementById('toggleSidebarBtn');
+  const notificationsControl = document.getElementById('notificationsControl');
+  const notificationsButton = document.getElementById('notificationsButton');
+  const notificationsPanel = document.getElementById('notificationsPanel');
+  const currentPage = document.body.dataset.page || 'inicio';
+  function animateBannerTitle() {
+    const title = document.querySelector('.walking-title');
+    if (!title) return;
+    const text = title.dataset.originalText || title.textContent.trim();
+    title.dataset.originalText = text; title.setAttribute('aria-label', text);
+    const visualText = document.createElement('span'); visualText.setAttribute('aria-hidden', 'true');
+    let step = 0;
+    text.split(/(\s+)/u).forEach(part => {
+      if (!part.trim()) { visualText.append(document.createTextNode(part)); return; }
+      const word = document.createElement('span'); word.className = 'walking-title-word';
+      for (const character of part) { const letter = document.createElement('span'); letter.className = 'walking-title-letter'; letter.style.setProperty('--step', String(step++)); letter.textContent = character; word.append(letter); }
+      visualText.append(word);
+    });
+    title.replaceChildren(visualText);
+  }
+  animateBannerTitle();
+  window.addEventListener('pageshow', event => { if (event.persisted) animateBannerTitle(); });
+
+  // Tema accesible y persistente entre las siete páginas.
+  function applyTheme() {
+    const saved = localStorage.getItem('theme');
+    const dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', dark);
+  }
+  applyTheme();
+  window.toggleDarkMode = function () {
+    const dark = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+    showToast(dark ? 'Modo oscuro activado' : 'Modo claro activado');
+  };
+
+  // Menú: plegable en escritorio y desplegable como panel en móvil.
+  function syncMenuForViewport() {
+    if (!sidebar) return;
+    if (window.innerWidth >= 768) {
+      sidebar.classList.remove('-translate-x-full');
+      document.body.classList.remove('menu-open');
+    } else if (!sidebar.dataset.mobileOpened) {
+      sidebar.classList.add('-translate-x-full');
+      document.body.classList.remove('menu-open');
+    }
+  }
+  function syncToggleButton() {
+    if (!toggleBtn || !sidebar) return;
+    const isOpen = window.innerWidth >= 768 ? !sidebar.classList.contains('sidebar-collapsed') : !sidebar.classList.contains('-translate-x-full');
+    toggleBtn.setAttribute('aria-expanded', String(isOpen));
+    toggleBtn.setAttribute('aria-label', isOpen ? 'Plegar menú' : 'Desplegar menú');
+    toggleBtn.title = isOpen ? 'Plegar menú' : 'Desplegar menú';
+    toggleBtn.innerHTML = `<i class="w-5 h-5" data-lucide="${isOpen ? 'panel-left' : 'arrow-right'}"></i>`;
+    if (window.lucide) window.lucide.createIcons();
+  }
+  if (toggleBtn && sidebar) {
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    toggleBtn.setAttribute('aria-label', 'Plegar o desplegar menú');
+    toggleBtn.addEventListener('click', () => {
+      if (window.innerWidth >= 768) {
+        const collapsed = sidebar.classList.toggle('sidebar-collapsed');
+        toggleBtn.setAttribute('aria-expanded', String(!collapsed));
+      } else {
+        const open = sidebar.classList.contains('-translate-x-full');
+        sidebar.classList.toggle('-translate-x-full', !open);
+        sidebar.dataset.mobileOpened = open ? 'true' : '';
+        document.body.classList.toggle('menu-open', open);
+        toggleBtn.setAttribute('aria-expanded', String(open));
+      }
+      syncToggleButton();
+    });
+    window.addEventListener('resize', () => { syncMenuForViewport(); syncToggleButton(); });
+    syncMenuForViewport();
+    syncToggleButton();
+  }
+  const contentArea = document.getElementById('contentArea');
+  const sectionBanner = document.querySelector('.section-banner');
+  if (contentArea && sectionBanner) {
+    contentArea.addEventListener('scroll', () => {
+      const offset = Math.min(contentArea.scrollTop * 0.04, 18);
+      sectionBanner.style.setProperty('--section-parallax', `${offset}px`);
+    }, { passive: true });
+  }
+  // Close mobile menu after choosing a destination. Navigation is now real HTML pages.
+  sidebar?.querySelectorAll('a.nav-item').forEach(link => {
+    const target = link.getAttribute('href') || '';
+    const active = target === (currentPage === 'inicio' ? 'index.html' : currentPage + '.html');
+    if (active) {
+      link.classList.add('bg-navy-50','dark:bg-slate-800','text-navy-800','dark:text-amber-400');
+      link.setAttribute('aria-current','page');
+    }
+    link.addEventListener('click', () => {
+      if (window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full'); sidebar.dataset.mobileOpened = '';
+        document.body.classList.remove('menu-open');
+      }
+    });
+  });
+  window.navigateTo = function (page) {
+    const routes = { inicio:'index.html', academico:'academico.html', noticias:'noticias.html', estudiantes:'estudiantes.html', institucion:'institucion.html', galeria:'galeria.html', contacto:'contacto.html' };
+    if (routes[page]) window.location.href = routes[page];
+  };
+
+  window.openModal = function (id) { const el=document.getElementById(id); if(el){el.classList.remove('hidden');el.classList.add('flex');} };
+  window.closeModal = function (id) { const el=document.getElementById(id); if(el){el.classList.add('hidden');el.classList.remove('flex');} };
+  function updateNotificationCount() {
+    const unreadCount = document.querySelectorAll('.notification-item[data-read="false"]').length;
+    const badge = document.getElementById('notificationBadge');
+    const summary = document.getElementById('notificationSummary');
+    if (badge) {
+      badge.textContent = String(unreadCount);
+      badge.hidden = unreadCount === 0;
+      badge.setAttribute('aria-label', `${unreadCount} notificaciones sin leer`);
+    }
+    if (summary) summary.textContent = unreadCount ? `Tienes ${unreadCount} avisos sin leer` : 'Estás al día';
+  }
+  window.toggleNotifications = function() {
+    if (!notificationsPanel || !notificationsButton) return;
+    const open = notificationsPanel.hidden;
+    notificationsPanel.hidden = !open;
+    notificationsButton.setAttribute('aria-expanded', String(open));
+    if (open && window.lucide) window.lucide.createIcons();
+  };
+  window.closeNotifications = function(restoreFocus = false) {
+    if (!notificationsPanel || !notificationsButton) return;
+    notificationsPanel.hidden = true;
+    notificationsButton.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) notificationsButton.focus();
+  };
+  window.markNotificationRead = function(notification) {
+    if (notification.dataset.read === 'true') return;
+    notification.dataset.read = 'true';
+    notification.querySelector('[data-notification-indicator]')?.classList.replace('bg-rose-500', 'bg-transparent');
+    updateNotificationCount();
+  };
+  window.markAllNotificationsRead = function() {
+    document.querySelectorAll('.notification-item[data-read="false"]').forEach(window.markNotificationRead);
+  };
+  document.addEventListener('click', event => {
+    if (!notificationsPanel?.hidden && !notificationsControl?.contains(event.target)) window.closeNotifications();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && notificationsPanel && !notificationsPanel.hidden) {
+      event.stopPropagation();
+      window.closeNotifications(true);
+    }
+  });
+  const repositorySubjects = [
+    { name:'Religión', group:'Área general', focus:'Valores, diálogo interreligioso, convivencia y reflexión ética.' },
+    { name:'Lenguaje', group:'Área general', focus:'Comprensión lectora, expresión oral, escritura y análisis de textos.' },
+    { name:'Educación Física', group:'Área general', focus:'Acondicionamiento físico, coordinación, deportes y cuidado de la salud.' },
+    { name:'Sistemas Informáticos', group:'Especialidades BTH', grades:['4to','5to','6to'], focus:'Hardware, sistemas operativos, redes, programación, desarrollo web y bases de datos.' },
+    { name:'Contabilidad General', group:'Especialidades BTH', grades:['4to','5to','6to'], focus:'Registros contables, libros, balances, costos y normativa tributaria.' },
+    { name:'Electrónica y Robótica', group:'Especialidades BTH', grades:['4to','5to','6to'], focus:'Circuitos, componentes, sensores, microcontroladores y automatización.' },
+    { name:'Gastronomía y Alimentación', group:'Especialidades BTH', grades:['4to','5to','6to'], focus:'Técnicas culinarias, higiene, nutrición, panadería y proyectos productivos.' },
+    { name:'Química', group:'Área general', focus:'Materia, cambios químicos, mezclas, laboratorio y seguridad.' },
+    { name:'Física', group:'Área general', focus:'Movimiento, fuerzas, energía, fenómenos y medición.' },
+    { name:'Psicología', group:'Área general', focus:'Desarrollo personal, emociones, aprendizaje y relaciones interpersonales.' },
+    { name:'Filosofía', group:'Área general', focus:'Pensamiento crítico, preguntas filosóficas, ética y argumentación.' },
+    { name:'Matemáticas', group:'Área general', focus:'Números, álgebra, geometría, funciones y resolución de problemas.' },
+    { name:'Música', group:'Área general', focus:'Ritmo, lectura musical, escucha, interpretación y expresión sonora.' },
+    { name:'Artes Plásticas', group:'Área general', focus:'Dibujo, color, composición, técnicas y expresión visual.' },
+    { name:'Técnicas Visuales', group:'Área general', focus:'Comunicación visual, diseño, imagen, composición y herramientas gráficas.' },
+    { name:'Inglés', group:'Área general', focus:'Vocabulario, lectura, escritura, escucha y comunicación en inglés.' }
+  ];
+  const repositoryGrades = ['1ro','2do','3ro','4to','5to','6to'];
+  let repositorySelectedSubject = repositorySubjects[0];
+  const repositorySubjectList = document.getElementById('repositorySubjectList');
+  const repositorySubjectSearch = document.getElementById('repositorySubjectSearch');
+  const repositoryResourceSearch = document.getElementById('repositoryResourceSearch');
+  const repositoryGradeFilter = document.getElementById('repositoryGradeFilter');
+  const repositoryResourceList = document.getElementById('repositoryResourceList');
+  const repositoryTabs = [...document.querySelectorAll('[data-repository-tab]')];
+  const repositoryPanels = repositoryTabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')));
+  const repositoryBookSearch = document.getElementById('repositoryBookSearch');
+  const repositoryVideoSearch = document.getElementById('repositoryVideoSearch');
+  const repositoryBookList = document.getElementById('repositoryBookList');
+  const repositoryVideoList = document.getElementById('repositoryVideoList');
+  const repositoryBookResources = [
+    { title:'Álgebra y resolución de problemas', subject:'Matemáticas', description:'Lecturas para practicar operaciones, expresiones algebraicas, ecuaciones y estrategias para resolver problemas paso a paso.', search:'libros álgebra secundaria ecuaciones resolución de problemas', cover:'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=720&q=80' },
+    { title:'Lectura, escritura y comprensión', subject:'Lenguaje', description:'Textos y actividades para fortalecer la comprensión lectora, la escritura clara y la argumentación.', search:'libros comprensión lectora escritura secundaria', cover:'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=720&q=80' },
+    { title:'Física: movimiento y energía', subject:'Física', description:'Material de consulta sobre magnitudes, movimiento, fuerzas y transformaciones de energía.', search:'libros física secundaria movimiento fuerzas energía', cover:'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=720&q=80' },
+    { title:'Química y laboratorio escolar', subject:'Química', description:'Introducción a la materia, las mezclas, los cambios químicos y las prácticas seguras de laboratorio.', search:'libros química secundaria materia laboratorio', cover:'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=720&q=80' },
+    { title:'Fundamentos de computación', subject:'Sistemas Informáticos', description:'Lecturas introductorias sobre componentes de computadora, sistemas operativos, redes y programación.', search:'libros informática secundaria programación redes', cover:'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=720&q=80' },
+    { title:'Contabilidad básica', subject:'Contabilidad General', description:'Conceptos iniciales de patrimonio, cuentas, registros contables y elaboración de balances.', search:'libros contabilidad básica estudiantes cuentas balances', cover:'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=720&q=80' }
+  ];
+  const repositoryVideoResources = [
+    { title:'Ecuaciones explicadas paso a paso', subject:'Matemáticas', description:'Repasa cómo plantear y resolver ecuaciones, y comprueba cada operación con ejemplos.', search:'ecuaciones de primer grado secundaria explicación ejercicios', thumbnail:'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=720&q=80' },
+    { title:'Ideas principales y comprensión lectora', subject:'Lenguaje', description:'Aprende a identificar el tema, las ideas principales y la información relevante de un texto.', search:'comprensión lectora secundaria ideas principales explicación', thumbnail:'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=720&q=80' },
+    { title:'Movimiento, velocidad y aceleración', subject:'Física', description:'Visualiza cómo se relacionan distancia, tiempo y velocidad mediante problemas guiados.', search:'movimiento velocidad aceleración física secundaria explicación', thumbnail:'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=720&q=80' },
+    { title:'Mezclas y métodos de separación', subject:'Química', description:'Observa ejemplos de mezclas homogéneas y heterogéneas y sus métodos de separación.', search:'mezclas métodos de separación química secundaria', thumbnail:'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=720&q=80' },
+    { title:'Primeros pasos con algoritmos', subject:'Sistemas Informáticos', description:'Conoce qué es un algoritmo y cómo representar instrucciones para resolver una tarea.', search:'algoritmos programación principiantes educación secundaria', thumbnail:'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=720&q=80' },
+    { title:'Asientos contables y partida doble', subject:'Contabilidad General', description:'Refuerza el registro de operaciones y la lógica de debe y haber con ejercicios sencillos.', search:'asientos contables partida doble explicación estudiantes', thumbnail:'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=720&q=80' }
+  ];
+  const repositoryBookStorageKey = 'franzTamayo.repository.books.v1';
+  const repositoryVideoStorageKey = 'franzTamayo.repository.videos.v1';
+  function isStoredResource(resource, kind) {
+    if (!resource || typeof resource !== 'object') return false;
+    if (!['title', 'subject', 'description'].every(key => typeof resource[key] === 'string')) return false;
+    if (kind === 'books') {
+      const validCover = typeof resource.cover === 'string'
+        && (/^data:image\/(?:jpeg|png|webp);base64,/i.test(resource.cover) || Boolean(validateExternalUrl(resource.cover)));
+      return validCover && (!resource.url || Boolean(validateExternalUrl(resource.url)));
+    }
+    const video = typeof resource.url === 'string' ? classifyVideoUrl(resource.url) : null;
+    return Boolean(video && video.videoType === resource.videoType);
+  }
+  function loadStoredResources(key, kind) {
+    try {
+      const stored = localStorage.getItem(key);
+      if (!stored) return [];
+      const resources = JSON.parse(stored);
+      if (!Array.isArray(resources) || !resources.every(resource => isStoredResource(resource, kind))) {
+        throw new Error(`Formato de recursos almacenados no válido: ${key}`);
+      }
+      return resources.map(resource => kind === 'videos'
+        ? { ...resource, ...classifyVideoUrl(resource.url), custom: true }
+        : { ...resource, custom: true });
+    } catch (error) {
+      console.error(`No se pudieron cargar los recursos guardados (${kind}).`, error);
+      setTimeout(() => window.showToast?.('No se pudieron cargar los recursos guardados en este navegador.'), 0);
+      return [];
+    }
+  }
+  repositoryBookResources.push(...loadStoredResources(repositoryBookStorageKey, 'books'));
+  repositoryVideoResources.push(...loadStoredResources(repositoryVideoStorageKey, 'videos'));
+  function persistCustomResources(key, resources) {
+    try {
+      localStorage.setItem(key, JSON.stringify(resources.filter(resource => resource.custom)));
+      return true;
+    } catch (error) {
+      console.error(`No se pudieron guardar los recursos (${key}).`, error);
+      window.showToast?.('No se pudo guardar. La imagen puede ser muy grande o el almacenamiento estar lleno.');
+      return false;
+    }
+  }
+  function validateExternalUrl(value) {
+    try {
+      const url = new URL(value);
+      return ['http:', 'https:'].includes(url.protocol) && !url.username && !url.password ? url.href : '';
+    } catch {
+      return '';
+    }
+  }
+  function classifyVideoUrl(value) {
+    const validatedUrl = validateExternalUrl(value);
+    if (!validatedUrl) return null;
+    const url = new URL(validatedUrl);
+    const host = url.hostname.toLowerCase().replace(/^www\./, '');
+    let videoId = '';
+    if (host === 'youtu.be') videoId = url.pathname.slice(1);
+    else if (['youtube.com', 'm.youtube.com', 'youtube-nocookie.com'].includes(host)) {
+      if (url.pathname === '/watch') videoId = url.searchParams.get('v') || '';
+      else videoId = url.pathname.match(/^\/(?:embed|shorts)\/([a-zA-Z0-9_-]{11})/)?.[1] || '';
+    }
+    if (videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId)) return { url: validatedUrl, videoType: 'youtube', videoId };
+    if (/\.(mp4|webm)$/i.test(url.pathname)) return { url: validatedUrl, videoType: 'direct' };
+    return null;
+  }
+  function readImageFile(file) {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      return Promise.reject(new Error('La portada debe ser JPG, PNG o WebP.'));
+    }
+    if (file.size > 1024 * 1024) return Promise.reject(new Error('La portada debe pesar como máximo 1 MB.'));
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        if (typeof reader.result === 'string') resolve(reader.result);
+        else reject(new Error('No se pudo leer el archivo de imagen.'));
+      });
+      reader.addEventListener('error', () => reject(reader.error || new Error('No se pudo leer el archivo de imagen.')));
+      reader.readAsDataURL(file);
+    });
+  }
+  function repositorySlug(value) {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+  function setRepositoryTab(selectedTab) {
+    repositoryTabs.forEach((tab, index) => {
+      const selected = tab === selectedTab;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      repositoryPanels[index]?.classList.toggle('hidden', !selected);
+      repositoryPanels[index]?.setAttribute('aria-hidden', String(!selected));
+    });
+  }
+  repositoryTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => setRepositoryTab(tab));
+    tab.addEventListener('keydown', event => {
+      let nextIndex = index;
+      if (event.key === 'ArrowRight') nextIndex = (index + 1) % repositoryTabs.length;
+      else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + repositoryTabs.length) % repositoryTabs.length;
+      else if (event.key === 'Home') nextIndex = 0;
+      else if (event.key === 'End') nextIndex = repositoryTabs.length - 1;
+      else return;
+      event.preventDefault();
+      repositoryTabs[nextIndex].focus();
+      setRepositoryTab(repositoryTabs[nextIndex]);
+    });
+  });
+  function renderReferenceCards(resources, list, searchInput, emptyState, kind) {
+    if (!list || !searchInput || !emptyState) return;
+    const query = searchInput.value.trim().toLocaleLowerCase('es');
+    const matchingResources = resources.filter(resource =>
+      `${resource.title} ${resource.subject} ${resource.description}`.toLocaleLowerCase('es').includes(query)
+    );
+    list.replaceChildren();
+    matchingResources.forEach(resource => {
+      const card = document.createElement('article');
+      card.className = 'artcraft-glow flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900';
+      const media = document.createElement('div');
+      media.className = 'repository-preview relative aspect-video overflow-hidden bg-slate-200 dark:bg-slate-800';
+      const image = document.createElement('img');
+      image.className = 'absolute inset-0 h-full w-full object-cover';
+      image.alt = kind === 'books' ? `Portada de ${resource.title}` : `Vista previa de ${resource.title}`;
+      image.loading = 'lazy';
+      image.src = kind === 'books'
+        ? resource.cover
+        : (resource.thumbnail || (resource.videoType === 'youtube'
+          ? `https://i.ytimg.com/vi/${encodeURIComponent(resource.videoId)}/hqdefault.jpg`
+          : 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=720&q=80'));
+      image.addEventListener('error', () => {
+        image.hidden = true;
+        media.classList.add('repository-cover-fallback');
+      }, { once: true });
+      media.append(image);
+      let previewActive = false;
+      let previewElement = null;
+      let previewTimer = 0;
+      if (kind === 'videos' && resource.videoType) {
+        const previewButton = document.createElement('button');
+        previewButton.type = 'button';
+        previewButton.className = 'absolute bottom-2 left-2 inline-flex items-center gap-1.5 rounded-lg bg-slate-950/80 px-2.5 py-1.5 text-[10px] font-semibold text-white backdrop-blur transition hover:bg-slate-950 focus-visible:outline';
+        previewButton.textContent = 'Vista previa';
+        previewButton.setAttribute('aria-pressed', 'false');
+        function stopPreview() {
+          if (!previewActive) return;
+          previewActive = false;
+          window.clearTimeout(previewTimer);
+          if (previewElement instanceof HTMLVideoElement) {
+            previewElement.pause();
+            previewElement.removeAttribute('src');
+            previewElement.load();
+          } else if (previewElement instanceof HTMLIFrameElement) {
+            previewElement.remove();
+          }
+          previewElement = null;
+          previewButton.textContent = 'Vista previa';
+          previewButton.setAttribute('aria-pressed', 'false');
+          image.hidden = false;
+        }
+        function startPreview() {
+          if (previewActive) return;
+          previewActive = true;
+          image.hidden = true;
+          previewButton.textContent = 'Reproduciendo';
+          previewButton.setAttribute('aria-pressed', 'true');
+          previewTimer = window.setTimeout(stopPreview, 12000);
+          if (resource.videoType === 'youtube') {
+            const frame = document.createElement('iframe');
+            frame.className = 'pointer-events-none absolute inset-0 h-full w-full';
+            frame.title = `Vista previa de ${resource.title}`;
+            frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+            frame.referrerPolicy = 'strict-origin-when-cross-origin';
+            frame.tabIndex = -1;
+            frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(resource.videoId)}?autoplay=1&mute=1&controls=0&loop=1&playlist=${encodeURIComponent(resource.videoId)}&playsinline=1&start=0&end=12`;
+            previewElement = frame;
+            media.append(frame);
+          } else {
+            const video = document.createElement('video');
+            video.className = 'pointer-events-none absolute inset-0 h-full w-full object-cover';
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.preload = 'none';
+            video.src = resource.url;
+            previewElement = video;
+            media.append(video);
+            video.play().catch(error => {
+              if (error.name !== 'AbortError') {
+                console.error('No se pudo reproducir la vista previa del video.', error);
+                window.showToast?.('No se pudo reproducir la vista previa. Abre el enlace para ver el video.');
+              }
+            });
+          }
+        }
+        previewButton.addEventListener('click', () => previewActive ? stopPreview() : startPreview());
+        card.addEventListener('pointerenter', event => {
+          if (event.pointerType !== 'touch') startPreview();
+        });
+        card.addEventListener('pointerleave', event => {
+          if (event.pointerType !== 'touch') stopPreview();
+        });
+        card.addEventListener('focusin', event => {
+          if (event.target !== previewButton) startPreview();
+        });
+        card.addEventListener('focusout', event => {
+          if (!card.contains(event.relatedTarget)) stopPreview();
+        });
+        media.append(previewButton);
+      }
+      card.append(media);
+      const subject = document.createElement('span');
+      subject.className = 'mx-4 mt-3 w-fit rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300';
+      subject.textContent = resource.subject;
+      const title = document.createElement('h4');
+      title.className = 'px-4 pt-2 font-display text-sm font-bold text-navy-900 dark:text-white';
+      title.textContent = resource.title;
+      const description = document.createElement('p');
+      description.className = 'flex-1 px-4 pt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300';
+      description.textContent = resource.description;
+      const actions = document.createElement('div');
+      actions.className = 'mt-4 flex items-center justify-between gap-2 border-t border-slate-100 px-4 py-3 dark:border-slate-800';
+      const link = document.createElement('a');
+      link.className = `inline-flex w-fit items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-bold transition ${kind === 'books' ? 'bg-amber-100 text-amber-900 hover:bg-amber-200 dark:bg-amber-400/15 dark:text-amber-200 dark:hover:bg-amber-400/25' : 'bg-rose-100 text-rose-900 hover:bg-rose-200 dark:bg-rose-400/15 dark:text-rose-200 dark:hover:bg-rose-400/25'}`;
+      const searchTerms = resource.search || `${resource.title} ${resource.subject}`;
+      link.href = resource.url || (kind === 'books'
+        ? `https://www.google.com/search?tbm=bks&q=${encodeURIComponent(searchTerms)}`
+        : `https://www.youtube.com/results?search_query=${encodeURIComponent(searchTerms)}`);
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = kind === 'books' ? (resource.url ? 'Abrir libro' : 'Buscar libros') : (resource.url ? 'Abrir video' : 'Buscar videos');
+      actions.append(link);
+      if (resource.custom) {
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'rounded-lg p-2 text-slate-400 transition hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-400/10 dark:hover:text-rose-300';
+        removeButton.setAttribute('aria-label', `Quitar ${kind === 'books' ? 'libro' : 'video'} ${resource.title}`);
+        removeButton.innerHTML = '<i class="h-4 w-4" data-lucide="trash-2" aria-hidden="true"></i>';
+        removeButton.addEventListener('click', () => {
+          const collection = kind === 'books' ? repositoryBookResources : repositoryVideoResources;
+          const storageKey = kind === 'books' ? repositoryBookStorageKey : repositoryVideoStorageKey;
+          const resourceIndex = collection.indexOf(resource);
+          if (resourceIndex < 0) return;
+          const [removed] = collection.splice(resourceIndex, 1);
+          if (!persistCustomResources(storageKey, collection)) {
+            collection.splice(resourceIndex, 0, removed);
+            return;
+          }
+          renderReferenceCards(collection, list, searchInput, emptyState, kind);
+          window.lucide?.createIcons();
+        });
+        actions.append(removeButton);
+      }
+      card.append(subject, title, description, actions);
+      list.append(card);
+    });
+    emptyState.classList.toggle('hidden', matchingResources.length > 0);
+    if (window.lucide) window.lucide.createIcons();
+  }
+  function renderRepositoryBooks() {
+    renderReferenceCards(repositoryBookResources, repositoryBookList, repositoryBookSearch, document.getElementById('repositoryBookEmptyState'), 'books');
+  }
+  function renderRepositoryVideos() {
+    renderReferenceCards(repositoryVideoResources, repositoryVideoList, repositoryVideoSearch, document.getElementById('repositoryVideoEmptyState'), 'videos');
+  }
+  document.getElementById('repositoryBookForm')?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const file = formData.get('coverFile');
+    const coverUrlInput = String(formData.get('coverUrl') || '').trim();
+    let cover = '';
+    try {
+      if (file instanceof File && file.size > 0) cover = await readImageFile(file);
+      else if (coverUrlInput) cover = validateExternalUrl(coverUrlInput);
+      if (!cover) {
+        window.showToast?.('Selecciona una imagen o ingresa una URL válida para la portada.');
+        return;
+      }
+    } catch (error) {
+      console.error('No se pudo preparar la portada del libro.', error);
+      window.showToast?.(error.message || 'No se pudo preparar la portada.');
+      return;
+    }
+    const bookUrlInput = String(formData.get('url') || '').trim();
+    const bookUrl = bookUrlInput ? validateExternalUrl(bookUrlInput) : '';
+    if (bookUrlInput && !bookUrl) {
+      window.showToast?.('El enlace del libro debe comenzar con http:// o https://.');
+      return;
+    }
+    const resource = {
+      title: String(formData.get('title')).trim(),
+      subject: String(formData.get('subject')).trim(),
+      description: String(formData.get('description')).trim(),
+      cover,
+      url: bookUrl,
+      custom: true
+    };
+    repositoryBookResources.push(resource);
+    if (!persistCustomResources(repositoryBookStorageKey, repositoryBookResources)) {
+      repositoryBookResources.pop();
+      return;
+    }
+    form.reset();
+    form.closest('details').open = false;
+    renderRepositoryBooks();
+    window.showToast?.('Libro y portada guardados en este navegador.');
+  });
+  document.getElementById('repositoryVideoForm')?.addEventListener('submit', event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const video = classifyVideoUrl(String(formData.get('url') || '').trim());
+    if (!video) {
+      window.showToast?.('Ingresa un enlace válido de YouTube o un archivo MP4/WebM.');
+      return;
+    }
+    const resource = {
+      title: String(formData.get('title')).trim(),
+      subject: String(formData.get('subject')).trim(),
+      description: String(formData.get('description')).trim(),
+      ...video,
+      custom: true
+    };
+    repositoryVideoResources.push(resource);
+    if (!persistCustomResources(repositoryVideoStorageKey, repositoryVideoResources)) {
+      repositoryVideoResources.pop();
+      return;
+    }
+    form.reset();
+    form.closest('details').open = false;
+    renderRepositoryVideos();
+    window.showToast?.('Video guardado en este navegador. Pasa el cursor sobre su tarjeta para ver el avance.');
+  });
+  function renderRepositorySubjects() {
+    const query = repositorySubjectSearch.value.trim().toLowerCase();
+    const groups = ['Área general', 'Especialidades BTH'];
+    repositorySubjectList.replaceChildren();
+    groups.forEach(groupName => {
+      const groupSubjects = repositorySubjects.filter(subject => subject.group === groupName && subject.name.toLowerCase().includes(query));
+      if (!groupSubjects.length) return;
+      const heading = document.createElement('p');
+      heading.className = 'col-span-full mb-1 mt-2 px-2 text-[10px] font-bold uppercase tracking-wide text-slate-400';
+      heading.textContent = groupName;
+      repositorySubjectList.append(heading);
+      groupSubjects.forEach(subject => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'repository-subject-button mb-1 w-full rounded-lg border border-transparent px-3 py-2.5 text-left text-xs font-semibold text-slate-700 hover:border-slate-200 hover:bg-slate-50 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:bg-slate-800';
+        button.textContent = subject.name;
+        button.setAttribute('aria-current', String(subject === repositorySelectedSubject));
+        button.addEventListener('click', () => {
+          repositorySelectedSubject = subject;
+          renderRepositorySubjects();
+          renderRepositoryResources();
+        });
+        repositorySubjectList.append(button);
+      });
+    });
+  }
+  function buildRepositoryResource(subject, grade, resourceType) {
+    const typeContent = {
+      'Guía de estudio': `Enfoque: ${subject.focus}\n\nRepaso sugerido:\n- Revisa tus apuntes de clase relacionados con estos contenidos.\n- Anota conceptos clave y dudas para consultar con tu docente.`,
+      'Ficha de actividades': `Enfoque: ${subject.focus}\n\nActividades de apoyo:\n1. Resume con tus palabras un concepto trabajado en clase.\n2. Desarrolla un ejemplo o ejercicio de este tema en tu cuaderno.\n3. Escribe una pregunta para revisar con tu docente.`,
+      'Autoevaluación': `Enfoque: ${subject.focus}\n\nAntes de terminar, comprueba:\n[ ] Puedo explicar las ideas principales.\n[ ] Puedo resolver una actividad relacionada.\n[ ] Identifico qué necesito repasar.`
+    };
+    return {
+      title: `${resourceType}: ${subject.name}`,
+      type: resourceType,
+      subject: subject.name,
+      grade,
+      description: subject.focus,
+      content: `RECURSO REFERENCIAL DE APOYO\nU.E. Técnico Humanístico Franz Tamayo\n\nMateria: ${subject.name}\nCurso: ${grade} de Secundaria\nTipo: ${resourceType}\n\n${typeContent[resourceType]}\n\nNota: material de apoyo editable; revisar y complementar con el contenido oficial de clase.`
+    };
+  }
+  function renderRepositoryResources() {
+    if (!repositoryResourceList) return;
+    const selectedGrade = repositoryGradeFilter.value;
+    const query = repositoryResourceSearch.value.trim().toLowerCase();
+    const subjectTitle = document.getElementById('repositorySubjectTitle');
+    const subjectDescription = document.getElementById('repositorySubjectDescription');
+    const emptyState = document.getElementById('repositoryEmptyState');
+    subjectTitle.textContent = repositorySelectedSubject.name;
+    subjectDescription.textContent = `${repositorySelectedSubject.group} · Recursos referenciales para apoyar el estudio.`;
+    const grades = repositorySelectedSubject.grades || repositoryGrades;
+    const resources = grades
+      .filter(grade => selectedGrade === 'all' || selectedGrade === grade)
+      .flatMap(grade => ['Guía de estudio','Ficha de actividades','Autoevaluación'].map(type => buildRepositoryResource(repositorySelectedSubject, grade, type)))
+      .filter(resource => `${resource.title} ${resource.description} ${resource.grade}`.toLowerCase().includes(query));
+    repositoryResourceList.replaceChildren();
+    resources.forEach(resource => {
+      const card = document.createElement('details');
+      card.className = 'repository-resource-card group rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900';
+      const summary = document.createElement('summary');
+      summary.className = 'flex items-center justify-between gap-3 p-3';
+      const text = document.createElement('span');
+      text.className = 'min-w-0';
+      const title = document.createElement('span');
+      title.className = 'block text-xs font-bold text-navy-900 dark:text-slate-100';
+      title.textContent = resource.title;
+      const meta = document.createElement('span');
+      meta.className = 'mt-1 block text-[10px] text-slate-500 dark:text-slate-400';
+      meta.textContent = `${resource.grade} de Secundaria · ${resource.type}`;
+      text.append(title, meta);
+      const chevron = document.createElement('i');
+      chevron.className = 'h-4 w-4 flex-shrink-0 text-slate-400 group-open:rotate-180 transition-transform';
+      chevron.setAttribute('data-lucide', 'chevron-down');
+      summary.append(text, chevron);
+      const details = document.createElement('div');
+      details.className = 'border-t border-slate-100 px-3 pb-3 pt-2 dark:border-slate-800';
+      const description = document.createElement('p');
+      description.className = 'text-[11px] leading-relaxed text-slate-600 dark:text-slate-300';
+      description.textContent = resource.description;
+      const preview = document.createElement('pre');
+      preview.className = 'mt-3 whitespace-pre-wrap rounded-lg bg-slate-50 p-3 font-sans text-[10px] leading-relaxed text-slate-600 dark:bg-slate-800 dark:text-slate-300';
+      preview.textContent = resource.content;
+      const download = document.createElement('button');
+      download.type = 'button';
+      download.className = 'mt-3 inline-flex items-center gap-2 rounded-lg bg-navy-800 px-3 py-2 text-[11px] font-bold text-white hover:bg-navy-700 dark:bg-amber-500 dark:text-navy-950';
+      download.innerHTML = '<i class="h-3.5 w-3.5" data-lucide="download" aria-hidden="true"></i><span>Descargar ficha</span>';
+      download.addEventListener('click', () => {
+        const blob = new Blob([resource.content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${repositorySlug(resource.subject)}_${repositorySlug(resource.grade)}_${repositorySlug(resource.type)}.txt`;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+      details.append(description, preview, download);
+      card.append(summary, details);
+      repositoryResourceList.append(card);
+    });
+    emptyState.classList.toggle('hidden', resources.length > 0);
+    if (window.lucide) window.lucide.createIcons();
+  }
+  window.openRepository = function() {
+    const modal = document.getElementById('digitalRepositoryModal');
+    if (!modal) return;
+    setRepositoryTab(document.getElementById('repositoryTabGuides'));
+    repositorySelectedSubject = repositorySubjects[0];
+    repositorySubjectSearch.value = '';
+    repositoryResourceSearch.value = '';
+    repositoryBookSearch.value = '';
+    repositoryVideoSearch.value = '';
+    repositoryGradeFilter.value = 'all';
+    renderRepositorySubjects();
+    renderRepositoryResources();
+    renderRepositoryBooks();
+    renderRepositoryVideos();
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.querySelector('button')?.focus();
+    if (window.lucide) window.lucide.createIcons();
+  };
+  repositorySubjectSearch?.addEventListener('input', renderRepositorySubjects);
+  repositoryResourceSearch?.addEventListener('input', renderRepositoryResources);
+  repositoryBookSearch?.addEventListener('input', renderRepositoryBooks);
+  repositoryVideoSearch?.addEventListener('input', renderRepositoryVideos);
+  repositoryGradeFilter?.addEventListener('change', renderRepositoryResources);
+  setRepositoryTab(document.getElementById('repositoryTabGuides'));
+  renderRepositoryBooks();
+  renderRepositoryVideos();
+  document.getElementById('digitalRepositoryModal')?.addEventListener('keydown', event => {
+    if (event.key === 'Escape') window.closeModal('digitalRepositoryModal');
+  });
+  window.showToast = function (message) {
+    const toast=document.getElementById('toast'), msg=document.getElementById('toastMessage');
+    if(!toast||!msg) return; msg.textContent=message; toast.classList.remove('translate-y-20','opacity-0');
+    clearTimeout(window.__toastTimer); window.__toastTimer=setTimeout(()=>toast.classList.add('translate-y-20','opacity-0'),3000);
+  };
+  window.openLightbox = function (src, caption) {
+    const img=document.getElementById('lightboxImg'), text=document.getElementById('lightboxCaption'), modal=document.getElementById('lightboxModal');
+    if(!img||!modal) return; img.src=src; if(text) text.textContent=caption||''; modal.classList.remove('hidden');modal.classList.add('flex');
+  };
+  window.closeLightbox = function () { const el=document.getElementById('lightboxModal'); if(el){el.classList.add('hidden');el.classList.remove('flex');} };
+
+  window.filterNewsCategory = function(category) {
+    document.querySelectorAll('.news-card').forEach(card => card.style.display = category==='all'||card.dataset.category===category ? 'flex':'none');
+    document.querySelectorAll('.news-filter-btn').forEach(btn => { const on=(btn.getAttribute('onclick')||'').includes("'"+category+"'"); btn.classList.toggle('filter-selected',on); });
+  };
+  window.filterNews = function() {
+    const input=document.getElementById('newsSearchInput'); if(!input)return; const q=input.value.toLowerCase().trim();
+    document.querySelectorAll('.news-card').forEach(card=>card.style.display=card.innerText.toLowerCase().includes(q)?'flex':'none');
+  };
+  window.filterGallery = function(category) {
+    document.querySelectorAll('.gallery-item').forEach(item=>item.style.display=category==='all'||item.dataset.category===category?'block':'none');
+  };
+  window.handleGlobalSearch = function() {
+    const input=document.getElementById('globalSearchInput'); if(!input)return; const q=input.value.toLowerCase().trim(); if(q.length<3)return;
+    let page='';
+    if(/bth|sistemas|contabilidad|malla|academ/.test(q)) page='academico';
+    else if(/noticia|comunicado|reuni|aviso/.test(q)) page='noticias';
+    else if(/estudiante|horario|libreta|tutor|biblioteca/.test(q)) page='estudiantes';
+    else if(/contacto|ubicaci|tel[eé]fono|direcci/.test(q)) page='contacto';
+    else if(/historia|instituci|misi[oó]n|visi[oó]n/.test(q)) page='institucion';
+    else if(/foto|galer[ií]a|imagen/.test(q)) page='galeria';
+    if(page) navigateTo(page);
+  };
+  window.handleContactSubmit = function(e) { e.preventDefault(); showToast('Mensaje registrado en este prototipo. Para recibirlo realmente se necesita conectar un servidor.'); e.target.reset(); };
+
+  // Asistente demostrativo conservado en el prototipo.
+  window.sendAiMessage = function() {
+    const input=document.getElementById('aiInput'); if(!input)return; const text=input.value.trim(); if(!text)return;
+    appendAiUserMessage(text); input.value='';
+    const lower=text.toLowerCase(); let reply='Consulta las secciones Académico, Noticias o Contacto para encontrar información institucional.';
+    if(/bth|titulaci[oó]n|requisito/.test(lower)) reply='Para información sobre la formación BTH, revisa Académico y confirma los requisitos vigentes con Dirección.';
+    else if(/examen|trimestre|fecha/.test(lower)) reply='Revisa Noticias y Avisos para consultar los comunicados académicos publicados por la institución.';
+    else if(/ubicaci[oó]n|d[oó]nde|direcci[oó]n/.test(lower)) reply='La plataforma identifica a la U.E. Franz Tamayo de Río Seco, El Alto. Confirma la dirección y horarios con Secretaría.';
+    setTimeout(()=>appendAiBotMessage(reply),350);
+  };
+  window.sendAiQuickPrompt = function(text) { const input=document.getElementById('aiInput'); if(input){input.value=text;sendAiMessage();} };
+  window.appendAiUserMessage = function(msg) { const log=document.getElementById('aiChatLog'); if(!log)return; const row=document.createElement('div');row.className='flex justify-end gap-2';const bubble=document.createElement('div');bubble.className='bg-navy-800 dark:bg-amber-500 text-white dark:text-navy-950 p-2.5 rounded-2xl rounded-tr-none shadow-sm max-w-[85%]';bubble.textContent=msg;row.appendChild(bubble);log.appendChild(row);log.scrollTop=log.scrollHeight; };
+  window.appendAiBotMessage = function(msg) { const log=document.getElementById('aiChatLog'); if(!log)return; const row=document.createElement('div');row.className='flex gap-2';const bubble=document.createElement('div');bubble.className='bg-white dark:bg-slate-700 p-2.5 rounded-2xl shadow-sm text-slate-700 dark:text-slate-100 max-w-[85%]';bubble.textContent=msg;row.appendChild(bubble);log.appendChild(row);log.scrollTop=log.scrollHeight; };
+
+  function setGameFeedback(element, state, message) {
+    if (!element) return;
+    element.textContent = message;
+    element.classList.add('game-status-feedback');
+    if (state) element.dataset.feedback = state;
+    else delete element.dataset.feedback;
+  }
+
+  const memoryBoard = document.getElementById('memoryGameBoard');
+  const memoryStatus = document.getElementById('memoryGameStatus');
+  let memoryCards = [];
+  let memorySelection = [];
+  let memoryLocked = false;
+  let memoryMoves = 0;
+  let memoryRunId = 0;
+  function renderMemoryGame() {
+    if (!memoryBoard || !memoryStatus) return;
+    memoryRunId += 1;
+    memoryCards = ['🧠','🎨','📚','🌱','🧠','🎨','📚','🌱'].sort(() => Math.random() - 0.5);
+    memorySelection = [];
+    memoryLocked = false;
+    memoryMoves = 0;
+    memoryBoard.replaceChildren();
+    memoryCards.forEach((symbol, index) => {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'game-memory-card';
+      card.textContent = '?';
+      card.dataset.revealed = 'false';
+      card.dataset.matched = 'false';
+      card.setAttribute('aria-label', `Carta ${index + 1}, oculta`);
+      card.addEventListener('click', () => {
+        if (memoryLocked || card.dataset.matched === 'true' || card.dataset.revealed === 'true') return;
+        card.dataset.revealed = 'true';
+        card.textContent = symbol;
+        card.setAttribute('aria-label', `Carta ${index + 1}: ${symbol}`);
+        memorySelection.push({ card, symbol, index });
+        if (memorySelection.length !== 2) return;
+        memoryMoves += 1;
+        if (memorySelection[0].symbol === memorySelection[1].symbol) {
+          memorySelection.forEach(item => {
+            item.card.dataset.matched = 'true';
+            item.card.disabled = true;
+          });
+          memorySelection = [];
+          const pairs = memoryBoard.querySelectorAll('[data-matched="true"]').length / 2;
+          setGameFeedback(memoryStatus, 'correct', pairs === 4
+            ? `¡Excelente! Encontraste los 4 pares en ${memoryMoves} intentos.`
+            : `Parejas encontradas: ${pairs} de 4 · Intentos: ${memoryMoves}`);
+        } else {
+          memoryLocked = true;
+          setGameFeedback(memoryStatus, 'incorrect', `No coinciden. Intenta otra vez · Intentos: ${memoryMoves}`);
+          const selection = [...memorySelection];
+          const runId = memoryRunId;
+          window.setTimeout(() => {
+            if (runId !== memoryRunId) return;
+            selection.forEach(item => {
+              item.card.dataset.revealed = 'false';
+              item.card.textContent = '?';
+              item.card.setAttribute('aria-label', `Carta ${item.index + 1}, oculta`);
+            });
+            memorySelection = [];
+            memoryLocked = false;
+          }, 750);
+        }
+      });
+      memoryBoard.append(card);
+    });
+    setGameFeedback(memoryStatus, null, 'Parejas encontradas: 0 de 4');
+  }
+  document.getElementById('memoryGameReset')?.addEventListener('click', renderMemoryGame);
+
+  const puzzleBoard = document.getElementById('numberPuzzleBoard');
+  const puzzleStatus = document.getElementById('numberPuzzleStatus');
+  let puzzleNumbers = [];
+  function shuffleNumberPuzzle() {
+    puzzleNumbers = [1,2,3,4,5,6,7,8,0];
+    let emptyIndex = 8;
+    let lastIndex = -1;
+    for (let move = 0; move < 60; move += 1) {
+      const neighbors = [emptyIndex - 3, emptyIndex + 3];
+      if (emptyIndex % 3 > 0) neighbors.push(emptyIndex - 1);
+      if (emptyIndex % 3 < 2) neighbors.push(emptyIndex + 1);
+      const validNeighbors = neighbors.filter(index => index >= 0 && index < 9 && index !== lastIndex);
+      const nextIndex = validNeighbors[Math.floor(Math.random() * validNeighbors.length)];
+      [puzzleNumbers[emptyIndex], puzzleNumbers[nextIndex]] = [puzzleNumbers[nextIndex], puzzleNumbers[emptyIndex]];
+      lastIndex = emptyIndex;
+      emptyIndex = nextIndex;
+    }
+    renderNumberPuzzle();
+  }
+  function renderNumberPuzzle() {
+    if (!puzzleBoard || !puzzleStatus) return;
+    puzzleBoard.replaceChildren();
+    puzzleNumbers.forEach((number, index) => {
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = number
+        ? 'aspect-square rounded-xl border border-sky-200 bg-sky-50 text-lg font-bold text-navy-800 transition hover:bg-sky-100 disabled:cursor-default dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700'
+        : 'aspect-square rounded-xl border border-dashed border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950';
+      tile.textContent = number ? String(number) : '';
+      tile.disabled = !number;
+      tile.setAttribute('aria-label', number ? `Mover ficha ${number}` : 'Espacio vacío');
+      const emptyIndex = puzzleNumbers.indexOf(0);
+      const adjacent = Math.abs(index - emptyIndex) === 3
+        || (Math.floor(index / 3) === Math.floor(emptyIndex / 3) && Math.abs(index - emptyIndex) === 1);
+      tile.disabled = !number || !adjacent;
+      tile.addEventListener('click', () => {
+        if (!adjacent || !number) return;
+        [puzzleNumbers[index], puzzleNumbers[emptyIndex]] = [puzzleNumbers[emptyIndex], puzzleNumbers[index]];
+        renderNumberPuzzle();
+      });
+      puzzleBoard.append(tile);
+    });
+    const solved = puzzleNumbers.every((number, index) => number === (index === 8 ? 0 : index + 1));
+    setGameFeedback(puzzleStatus, solved ? 'correct' : null, solved ? '¡Puzzle resuelto! Tu mente está en forma.' : '¡Encuentra el orden correcto!');
+  }
+  document.getElementById('numberPuzzleReset')?.addEventListener('click', shuffleNumberPuzzle);
+
+  const riddles = [
+    { question:'Tengo hojas, pero no soy árbol; guardo historias y conocimientos. ¿Qué soy?', options:['Un libro','Una mochila','Una ventana'], answer:0 },
+    { question:'Cuanto más compartes una idea, más crece. ¿Qué es?', options:['Una sombra','La creatividad','El silencio'], answer:1 },
+    { question:'Tiene teclas, pero no abre puertas; con ella escribes y creas. ¿Qué es?', options:['Un teclado','Un mapa','Una regla'], answer:0 },
+    { question:'Si me mezclas con amarillo, puedo crear muchos tonos. En el cielo despejado suelo aparecer. ¿Qué color soy?', options:['Verde','Azul','Rojo'], answer:1 }
+  ];
+  const riddleQuestion = document.getElementById('riddleQuestion');
+  const riddleOptions = document.getElementById('riddleOptions');
+  const riddleStatus = document.getElementById('riddleStatus');
+  let currentRiddle = -1;
+  function showRiddle() {
+    if (!riddleQuestion || !riddleOptions || !riddleStatus) return;
+    let nextIndex = Math.floor(Math.random() * riddles.length);
+    if (riddles.length > 1 && nextIndex === currentRiddle) nextIndex = (nextIndex + 1) % riddles.length;
+    currentRiddle = nextIndex;
+    const riddle = riddles[currentRiddle];
+    riddleQuestion.textContent = riddle.question;
+    setGameFeedback(riddleStatus, null, '¡Tú puedes!');
+    riddleOptions.replaceChildren();
+    riddle.options.forEach((option, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'rounded-lg border border-slate-200 px-3 py-2 text-left text-[11px] font-semibold text-slate-700 transition hover:border-amber-400 hover:bg-amber-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800';
+      button.textContent = option;
+      button.addEventListener('click', () => {
+        const correct = index === riddle.answer;
+        setGameFeedback(riddleStatus, correct ? 'correct' : 'incorrect', correct ? '¡Correcto! Buen pensamiento lateral.' : 'Casi. Prueba otra opción o pide una nueva adivinanza.');
+        riddleOptions.querySelectorAll('button').forEach((answerButton, answerIndex) => {
+          answerButton.disabled = correct || answerIndex === index;
+          if (answerIndex === riddle.answer) {
+            answerButton.classList.add('riddle-answer-correct');
+            answerButton.dataset.answerState = 'correct';
+            answerButton.setAttribute('aria-label', `${answerButton.textContent}, respuesta correcta`);
+          } else if (answerIndex === index && !correct) {
+            answerButton.classList.add('riddle-answer-incorrect');
+            answerButton.dataset.answerState = 'incorrect';
+            answerButton.setAttribute('aria-label', `${answerButton.textContent}, respuesta incorrecta`);
+          }
+        });
+      });
+      riddleOptions.append(button);
+    });
+  }
+  document.getElementById('riddleNext')?.addEventListener('click', showRiddle);
+
+  const wordBoard = document.getElementById('wordSearchBoard');
+  const wordStatus = document.getElementById('wordSearchStatus');
+  const wordLocations = [{ word:'IDEA', row:0, column:0 },{ word:'ARTE', row:2, column:2 },{ word:'SOL', row:4, column:1 },{ word:'PAZ', row:6, column:4 }];
+  let wordLetters = [];
+  let wordSelection = null;
+  let wordsFound = new Set();
+  function renderWordSearch() {
+    if (!wordBoard || !wordStatus) return;
+    const alphabet = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+    wordLetters = Array.from({ length:64 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]);
+    wordSelection = null;
+    wordsFound = new Set();
+    wordLocations.forEach(({word,row,column}) => {
+      [...word].forEach((letter, offset) => { wordLetters[row * 8 + column + offset] = letter; });
+    });
+    wordBoard.replaceChildren();
+    wordLetters.forEach((letter, index) => {
+      const cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'word-cell';
+      cell.textContent = letter;
+      cell.dataset.selected = 'false';
+      cell.dataset.found = 'false';
+      cell.setAttribute('aria-label', `Fila ${Math.floor(index / 8) + 1}, columna ${index % 8 + 1}: ${letter}`);
+      cell.addEventListener('click', () => {
+        if (cell.dataset.found === 'true') return;
+        if (wordSelection === null) {
+          wordSelection = index;
+          cell.dataset.selected = 'true';
+          setGameFeedback(wordStatus, null, 'Ahora toca el final de la palabra en la misma fila.');
+          return;
+        }
+        const start = wordSelection;
+        const end = index;
+        wordBoard.children[start].dataset.selected = 'false';
+        wordSelection = null;
+        if (start === end) {
+          setGameFeedback(wordStatus, 'incorrect', 'Elige otra casilla de la misma fila para formar la palabra.');
+          return;
+        }
+        if (Math.floor(start / 8) !== Math.floor(end / 8)) {
+          setGameFeedback(wordStatus, 'incorrect', 'Para este reto, selecciona el inicio y el final en la misma fila.');
+          return;
+        }
+        const firstColumn = Math.min(start % 8, end % 8);
+        const lastColumn = Math.max(start % 8, end % 8);
+        const rowStart = Math.floor(start / 8) * 8;
+        const selectedWord = wordLetters.slice(rowStart + firstColumn, rowStart + lastColumn + 1).join('');
+        const match = wordLocations.find(location =>
+          location.row === Math.floor(start / 8)
+          && location.column === firstColumn
+          && location.word === selectedWord
+          && !wordsFound.has(location.word)
+        );
+        if (!match) {
+          setGameFeedback(wordStatus, 'incorrect', 'Esa no era una palabra de la lista. Sigue buscando.');
+          return;
+        }
+        wordsFound.add(match.word);
+        for (let column = firstColumn; column <= lastColumn; column += 1) {
+          wordBoard.children[rowStart + column].dataset.found = 'true';
+        }
+        setGameFeedback(wordStatus, 'correct', wordsFound.size === wordLocations.length
+          ? '¡Todas las palabras encontradas! Muy buena observación.'
+          : `¡Encontraste ${match.word}! Palabras: ${wordsFound.size} de ${wordLocations.length}.`);
+      });
+      wordBoard.append(cell);
+    });
+    setGameFeedback(wordStatus, null, 'Palabras encontradas: 0 de 4');
+  }
+  document.getElementById('wordSearchReset')?.addEventListener('click', renderWordSearch);
+
+  const patternButtons = [...document.querySelectorAll('[data-pattern-color]')];
+  const patternStatus = document.getElementById('colorPatternStatus');
+  const patternStart = document.getElementById('colorPatternStart');
+  let colorSequence = [];
+  let colorInputIndex = 0;
+  let colorAcceptingInput = false;
+  let colorRound = 0;
+  let colorRunId = 0;
+  function flashPatternColor(colorIndex, runId) {
+    return new Promise(resolve => {
+      const button = patternButtons[colorIndex];
+      if (!button || runId !== colorRunId) { resolve(); return; }
+      button.classList.add('is-lit');
+      window.setTimeout(() => {
+        button.classList.remove('is-lit');
+        resolve();
+      }, 380);
+    });
+  }
+  async function playColorSequence(runId) {
+    colorAcceptingInput = false;
+    setGameFeedback(patternStatus, null, `Observa la secuencia · Ronda ${colorRound}`);
+    await new Promise(resolve => window.setTimeout(resolve, 450));
+    for (const colorIndex of colorSequence) {
+      if (runId !== colorRunId) return;
+      await flashPatternColor(colorIndex, runId);
+      await new Promise(resolve => window.setTimeout(resolve, 180));
+    }
+    if (runId === colorRunId) {
+      colorInputIndex = 0;
+      colorAcceptingInput = true;
+      setGameFeedback(patternStatus, null, `Tu turno · Repite ${colorSequence.length} ${colorSequence.length === 1 ? 'color' : 'colores'}.`);
+    }
+  }
+  patternButtons.forEach(button => button.addEventListener('click', () => {
+    if (!colorAcceptingInput) return;
+    const chosenColor = Number(button.dataset.patternColor);
+    flashPatternColor(chosenColor, colorRunId);
+    if (chosenColor !== colorSequence[colorInputIndex]) {
+      colorAcceptingInput = false;
+      setGameFeedback(patternStatus, 'incorrect', `Secuencia terminada en la ronda ${colorRound}. Pulsa “Comenzar” para intentarlo otra vez.`);
+      return;
+    }
+    colorInputIndex += 1;
+    if (colorInputIndex === colorSequence.length) {
+      colorAcceptingInput = false;
+      setGameFeedback(patternStatus, 'correct', `¡Bien hecho! Ronda ${colorRound} completada.`);
+      const completedRunId = colorRunId;
+      window.setTimeout(() => {
+        if (!patternStart || completedRunId !== colorRunId || colorAcceptingInput || colorInputIndex !== colorSequence.length) return;
+        colorRound += 1;
+        colorSequence.push(Math.floor(Math.random() * patternButtons.length));
+        playColorSequence(colorRunId);
+      }, 650);
+    }
+  }));
+  patternStart?.addEventListener('click', () => {
+    colorRunId += 1;
+    colorRound = 1;
+    colorSequence = [Math.floor(Math.random() * patternButtons.length)];
+    playColorSequence(colorRunId);
+  });
+
+  renderMemoryGame();
+  shuffleNumberPuzzle();
+  showRiddle();
+  renderWordSearch();
+  if(window.lucide) window.lucide.createIcons();
+})();
+
+</script>
+<script src="ficha.js" defer></script>
+</body>
+</html>

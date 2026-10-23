@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#29478c">
+<title>Noticias & Avisos | U.E. Técnico Humanístico Franz Tamayo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>tailwind.config={darkMode:'class',theme:{extend:{colors:{navy:{50:'#f0f3fa',100:'#dbe2f0',500:'#29478c',700:'#29478c',800:'#29478c',900:'#20386f',950:'#15264d'},gold:{400:'#eb9b45',500:'#eb9b45',600:'#d62832'},bth:{green:'#059669',teal:'#0d9488'}},fontFamily:{sans:['Inter','sans-serif'],display:['Poppins','sans-serif']}}}};</script>
+<style>
+/* CSS propio de noticias.html integrado en este archivo */
+
+        /* Custom Canva & ArtCraft Scrollbars & Animations */
+
+:root {
+  --ft-blue: #29478c;
+  --ft-beige: #d1c4b4;
+  --ft-red: #d62832;
+  --ft-orange: #eb9b45;
+  --ft-mauve: #9e7c75;
+  --ft-ink: #182642;
+  --ft-paper: #f7f5f2;
+}
+html { scroll-behavior: smooth; }
+body { background-color: var(--ft-paper); }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 3px solid var(--ft-orange) !important;
+  outline-offset: 3px;
+}
+.sidebar-transition { transition: width .28s ease, transform .28s ease, opacity .2s ease; }
+@media (min-width: 768px) {
+  #mainSidebar.sidebar-collapsed {
+    width: 0 !important; min-width: 0 !important; flex-basis: 0 !important;
+    overflow: hidden; border-right-width: 0 !important; opacity: 0; pointer-events: none;
+  }
+}
+#toggleSidebarBtn { border: 1px solid rgba(209,196,180,.25); }
+#toggleSidebarBtn:hover { background: var(--ft-red); color: #fff; }
+.notification-panel { position: fixed; top: 4.5rem; right: .75rem; width: min(22rem, calc(100vw - 1.5rem)); max-height: calc(100vh - 5.25rem); z-index: 40; transform-origin: top right; }
+.notification-panel[hidden], #notificationBadge[hidden] { display: none; }
+.notification-item[data-read="true"] { opacity: .72; }
+.artcraft-glow { transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, border-color .28s ease; }
+.artcraft-glow:hover { transform: translateY(-5px); box-shadow: 0 18px 35px rgba(41,71,140,.16); border-color: rgba(235,155,69,.7); }
+#privacyModeButton { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+#privacyModeButton:hover, #privacyModeButton:focus-visible { transform: translateY(-2px); border-color: #fcd34d; box-shadow: 0 0 0 2px rgba(251,191,36,.28), 0 0 18px rgba(251,191,36,.55); outline: none; }
+#privacyModeButton:hover > div, #privacyModeButton:focus-visible > div { background-color: #fbbf24; color: #0f172a; box-shadow: 0 0 12px rgba(251,191,36,.8); }
+#privacyModeButton [data-lucide="pause"], #privacyModeButton [data-lucide="eye-off"] { transition: transform .2s ease; }
+#privacyModeButton:hover [data-lucide="eye-off"], #privacyModeButton:focus-visible [data-lucide="eye-off"] { transform: scale(1.12); }
+@media (prefers-reduced-motion: reduce) { #privacyModeButton, #privacyModeButton [data-lucide="pause"], #privacyModeButton [data-lucide="eye-off"] { transition: none; } #privacyModeButton:hover, #privacyModeButton:focus-visible { transform: none; } }
+.page-section.active { animation: pageEnter .36s ease both; }
+.section-entry { display: flex; flex-direction: column; gap: 2.5rem; }
+.section-entry > * { animation: sectionRise .8s cubic-bezier(.2,.75,.25,1) both; }
+.section-entry > :nth-child(1) { animation-delay: .05s; }
+.section-entry > :nth-child(2) { animation-delay: .17s; }
+.section-entry > :nth-child(3) { animation-delay: .29s; }
+.section-entry > :nth-child(4) { animation-delay: .41s; }
+.section-entry > :nth-child(5) { animation-delay: .53s; }
+.section-entry > :nth-child(6) { animation-delay: .65s; }
+.section-entry > :nth-child(7) { animation-delay: .77s; }
+.section-banner { --section-parallax: 0px; min-height: 270px; background-size: cover; background-position: center calc(50% + var(--section-parallax)); }
+.section-banner-content > * { animation: sectionRise .7s cubic-bezier(.2,.75,.25,1) both; }
+.section-banner-content > :nth-child(1) { animation-delay: .16s; }
+.section-banner-content > :nth-child(2) { animation-delay: .28s; }
+.section-banner-content > :nth-child(3) { animation-delay: .4s; }
+.section-banner-title { animation: sectionRise .7s cubic-bezier(.2,.75,.25,1) both, sectionTitleGlow 4s ease-in-out 1s infinite; }
+.walking-title-word { display: inline-block; white-space: nowrap; }
+.walking-title-letter { display: inline-block; opacity: 0; transform: translate3d(0,.45em,0) rotate(-8deg); transform-origin: 50% 100%; animation: walkingTitleStep .38s cubic-bezier(.22,.75,.25,1) both; animation-delay: calc(var(--step) * 28ms); }
+@keyframes sectionRise { from { opacity: 0; translate: 0 22px; filter: blur(4px); } to { opacity: 1; translate: 0 0; filter: blur(0); } }
+@keyframes sectionTitleGlow { 0%, 100% { text-shadow: 0 0 0 rgba(235,155,69,0); } 50% { text-shadow: 0 0 16px rgba(235,155,69,.48); } }
+@keyframes walkingTitleStep { 0% { opacity: 0; transform: translate3d(0,.45em,0) rotate(-8deg); } 65% { opacity: 1; transform: translate3d(0,-.12em,0) rotate(3deg); } 100% { opacity: 1; transform: translate3d(0,0,0) rotate(0); } }
+@keyframes pageEnter { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+.interactive-banner { isolation: isolate; min-height: 220px; }
+.interactive-banner::after {
+  content: ""; position: absolute; inset: auto -5% -55% auto; width: 260px; height: 260px;
+  border: 1px solid rgba(255,255,255,.22); border-radius: 48% 52% 62% 38%;
+  transform: rotate(-24deg); pointer-events: none; z-index: 0;
+}
+.infinite-carousel-track { will-change: transform; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+  .section-entry > *, .section-banner-content > * { animation: none !important; opacity: 1 !important; translate: none !important; filter: none !important; }
+  .walking-title-letter { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+@media (max-width: 767px) {
+  #mainSidebar { max-width: min(82vw, 320px); }
+  .section-banner { min-height: 290px; }
+  .section-entry { gap: 2rem; }
+  #contentArea { padding: 14px !important; }
+}
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(10px);
+        }
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Glassmorphism effects inspired by ArtCraft */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* ArtCraft Interactive Glow Card */
+        .artcraft-glow {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .artcraft-glow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px -10px rgba(37, 75, 161, 0.3);
+        }
+        .dark .artcraft-glow:hover {
+            box-shadow: 0 14px 30px -10px rgba(217, 119, 6, 0.25);
+        }
+
+        /* Infinite Seamless Moving Carousel (Extremes to Extremes) */
+        @keyframes scrollSeamless {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .infinite-carousel-track {
+            display: flex;
+            width: max-content;
+            animation: scrollSeamless 30s linear infinite;
+        }
+
+        .infinite-carousel-container:hover .infinite-carousel-track {
+            animation-play-state: paused;
+        }
+
+        /* Pulse glow for AI Button */
+        @keyframes aiGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.5), 0 0 30px rgba(37, 75, 161, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(217, 119, 6, 0.8), 0 0 45px rgba(37, 75, 161, 0.6); }
+        }
+        .ai-btn-glow {
+            animation: aiGlow 3s infinite ease-in-out;
+        }
+    
+/* Multi-page navigation refinements */
+.page-section { display:block !important; opacity:1 !important; transform:none !important; }
+#mainSidebar { transition: width .28s ease, transform .28s ease, opacity .2s ease; }
+@media (max-width:767px) { #mainSidebar { position:absolute; inset:0 auto 0 0; height:100%; } body.menu-open::after { content:""; position:fixed; inset:64px 0 0; background:rgba(10,18,35,.38); z-index:15; } }
+.interactive-banner { background-size:cover; background-position:center; }
+
+</style>
+</head>
+<body data-page="noticias" class="h-full flex flex-col font-sans text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 antialiased overflow-hidden transition-colors duration-300">
+<header class="h-16 bg-navy-900 dark:bg-slate-900 text-white flex items-center justify-between px-4 z-30 shadow-lg border-b border-navy-800 dark:border-slate-800 flex-shrink-0">
+<div class="flex items-center gap-3">
+<!-- Toggle Sidebar Mobile/Desktop -->
+<button class="p-2 rounded-xl hover:bg-navy-800 dark:hover:bg-slate-800 text-slate-200 transition" id="toggleSidebarBtn" title="Plegar/Desplegar Menú">
+<i class="w-5 h-5" data-lucide="panel-left"></i>
+</button>
+<!-- History Back / Forward Controls -->
+
+
+
+
+
+
+
+<!-- Brand Logo & Title -->
+<!-- LOGOTIPO INSTITUCIONAL -->
+<div
+  class="w-10 h-10 flex items-center justify-center
+         flex-shrink-0 overflow-hidden"
+>
+  <img
+    src="img/logo.jpg"
+    alt="Logotipo de la U.E. Franz Tamayo"
+    class="w-full h-full object-contain"
+  >          
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="hidden md:block">
+<h1 class="font-display font-extrabold text-sm leading-tight text-white tracking-wide">U.E. Franz Tamayo</h1>
+<p class="text-[11px] text-amber-300 font-medium">Rio Seco • SIE: 40730635 | El Alto 2026</p>
+</div>
+</div>
+</div>
+<!-- Global Search Bar -->
+<div class="flex-1 max-w-md mx-4 hidden md:block">
+<div class="relative">
+<i class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" data-lucide="search"></i>
+<input class="w-full bg-navy-800/90 dark:bg-slate-800/90 text-xs text-white placeholder-slate-400 pl-9 pr-4 py-2 rounded-xl border border-navy-700 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition" id="globalSearchInput" onkeyup="handleGlobalSearch()" placeholder="Buscar avisos, módulos BTH, planteles, trámites..." type="text"/>
+</div>
+</div>
+<!-- Right Header Action Controls (AI Button, Theme Toggle, Notifications, User Badge) -->
+<div class="flex items-center gap-2 sm:gap-3">
+<!-- BOTÓN IA (ArtCraft Assistant) -->
+<button class="ai-btn-glow bg-gradient-to-r from-amber-500 via-gold-500 to-navy-500 hover:from-amber-600 hover:to-navy-600 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-2 transition shadow-md" onclick="openModal('aiModal')">
+<i class="w-4 h-4 text-yellow-200 animate-spin" data-lucide="sparkles"></i>
+<span class="hidden sm:inline">IA Tamayita</span>
+</button>
+<!-- DARK MODE / LIGHT MODE INCLUSION TOGGLE BUTTON -->
+<button class="p-2 rounded-xl bg-navy-800/80 dark:bg-slate-800 text-amber-400 dark:text-amber-300 hover:bg-navy-700 dark:hover:bg-slate-700 transition" id="themeToggleBtn" onclick="toggleDarkMode()" title="Cambiar Modo Claro/Oscuro">
+<i class="w-5 h-5 hidden dark:block" data-lucide="sun"></i>
+<i class="w-5 h-5 block dark:hidden" data-lucide="moon"></i>
+</button>
+<!-- Notifications Button and compact dropdown -->
+<div class="relative" id="notificationsControl">
+<button class="relative p-2 rounded-xl bg-navy-800/80 dark:bg-slate-800 text-slate-200 transition hover:bg-navy-700 dark:hover:bg-slate-700" id="notificationsButton" type="button" aria-label="Notificaciones" aria-expanded="false" aria-controls="notificationsPanel" onclick="toggleNotifications()">
+<i class="pointer-events-none w-5 h-5" data-lucide="bell"></i>
+<span class="pointer-events-none absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold leading-none text-white" id="notificationBadge" aria-label="2 notificaciones sin leer">2</span>
+</button>
+<section class="notification-panel overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900" id="notificationsPanel" aria-label="Notificaciones recientes" aria-live="polite" hidden>
+<div class="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 dark:border-slate-800"><div><h2 class="text-sm font-bold text-navy-900 dark:text-white">Notificaciones</h2><p class="text-[10px] text-slate-500 dark:text-slate-400" id="notificationSummary">Tienes 2 avisos sin leer</p></div><button class="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white" type="button" onclick="closeNotifications(true)" aria-label="Cerrar notificaciones"><i class="h-4 w-4" data-lucide="x"></i></button></div>
+<div class="max-h-[min(55vh,22rem)] space-y-2 overflow-y-auto p-3">
+<button class="notification-item flex w-full items-start gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-left transition hover:border-navy-100 hover:bg-navy-50 dark:border-slate-800 dark:bg-slate-800/60 dark:hover:bg-slate-800" type="button" data-read="false" onclick="markNotificationRead(this)"><span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-rose-500" data-notification-indicator aria-hidden="true"></span><span class="min-w-0 flex-1"><span class="block text-xs font-semibold text-slate-800 dark:text-slate-100">Publicación de Horarios BTH</span><span class="mt-1 block text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">Ya puedes consultar los horarios de las especialidades técnicas.</span><span class="mt-1.5 block text-[10px] text-slate-400">Hace 2 horas</span></span></button>
+<button class="notification-item flex w-full items-start gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 text-left transition hover:border-navy-100 hover:bg-navy-50 dark:border-slate-800 dark:bg-slate-800/60 dark:hover:bg-slate-800" type="button" data-read="false" onclick="markNotificationRead(this)"><span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-rose-500" data-notification-indicator aria-hidden="true"></span><span class="min-w-0 flex-1"><span class="block text-xs font-semibold text-slate-800 dark:text-slate-100">Inscripciones al Torneo de Robótica</span><span class="mt-1 block text-[10px] leading-relaxed text-slate-500 dark:text-slate-400">Inscripciones abiertas para estudiantes interesados.</span><span class="mt-1.5 block text-[10px] text-slate-400">Ayer</span></span></button>
+</div>
+<div class="flex justify-between border-t border-slate-100 px-4 py-3 dark:border-slate-800"><button class="text-[11px] font-semibold text-slate-500 transition hover:text-navy-800 dark:hover:text-amber-300" type="button" onclick="markAllNotificationsRead()">Marcar todo como leído</button><button class="text-[11px] font-bold text-navy-800 transition hover:text-navy-600 dark:text-amber-400 dark:hover:text-amber-300" type="button" onclick="closeNotifications(true)">Cerrar</button></div>
+</section>
+</div>
+<div class="h-6 w-px bg-navy-800 dark:bg-slate-800 hidden sm:block"></div>
+<!-- Simulated Location/Campus Tag -->
+<button class="group flex items-center gap-2 bg-navy-800/80 dark:bg-slate-800/80 hover:bg-navy-800 hover:border-amber-300 hover:ring-2 hover:ring-amber-400/50 hover:shadow-[0_0_18px_rgba(251,191,36,0.65)] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 p-1.5 rounded-xl border border-navy-700 dark:border-slate-700 cursor-pointer transition duration-200" id="privacyModeButton" type="button" aria-label="Activar pausa" aria-controls="privacyScreen" aria-pressed="false" title="Pausa" onclick="togglePrivacyScreen()">
+<div class="w-7 h-7 rounded-lg bg-bth-green group-hover:bg-amber-400 group-hover:text-navy-950 group-hover:shadow-[0_0_12px_rgba(251,191,36,0.8)] flex items-center justify-center text-xs font-bold text-white shadow transition duration-200">
+<i class="w-4 h-4 transition-transform duration-200 group-hover:hidden group-focus-visible:hidden" data-lucide="pause"></i>
+<i class="hidden w-4 h-4 transition-transform duration-200 group-hover:block group-focus-visible:block group-hover:scale-110 group-focus-visible:scale-110" data-lucide="eye-off"></i>
+                </div>
+<span class="text-xs font-medium text-slate-200 hidden sm:inline pr-1">Pausa</span>
+</button>
+</div>
+</header>
+<div class="flex-1 flex overflow-hidden relative">
+<aside class="sidebar-transition w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 flex-shrink-0 absolute md:relative h-full shadow-xl md:shadow-none -translate-x-full md:translate-x-0" id="mainSidebar">
+<!-- Navigation Links -->
+<div class="p-3 space-y-1.5 flex-1 overflow-y-auto">
+<div class="px-3 py-2 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                    Navegación Principal
+                </div>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group active" data-page="inicio" href="index.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="layout-dashboard"></i>
+<span class="sidebar-text flex-1">Inicio</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="academico" href="academico.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="graduation-cap"></i>
+<span class="sidebar-text flex-1">Académico &amp; BTH</span>
+<span class="sidebar-text bg-bth-green/10 text-bth-green font-bold text-[10px] px-2 py-0.5 rounded-full">BTH</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="noticias" href="noticias.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="newspaper"></i>
+<span class="sidebar-text flex-1">Noticias &amp; Avisos</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="estudiantes" href="estudiantes.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="users"></i>
+<span class="sidebar-text flex-1">Portal Estudiantes</span>
+</a>
+<div class="px-3 pt-4 pb-2 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider sidebar-text">
+                    Institucional
+                </div>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="institucion" href="institucion.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="building-2"></i>
+<span class="sidebar-text flex-1">Nuestra Institución</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="galeria" href="galeria.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="image"></i>
+<span class="sidebar-text flex-1">Galería de Fotos</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-slate-800 hover:text-navy-800 dark:hover:text-amber-400 transition group" data-page="contacto" href="contacto.html" >
+<i class="w-4 h-4 text-slate-500 group-hover:text-navy-800 dark:group-hover:text-amber-400 transition" data-lucide="phone-call"></i>
+<span class="sidebar-text flex-1">Contacto</span>
+</a>
+</div>
+<!-- Quick BTH Promo Box in Sidebar -->
+<div class="p-3 sidebar-text">
+<div class="bg-gradient-to-br from-navy-900 to-navy-800 dark:from-slate-800 dark:to-slate-900 text-white rounded-2xl p-3.5 shadow-md text-xs border border-navy-700/60 dark:border-slate-700">
+<div class="flex items-center gap-2 font-bold text-amber-400 mb-1">
+<i class="w-4 h-4" data-lucide="award"></i>
+<span>BTH Rio Seco 2026</span>
+</div>
+<p class="text-[11px] text-slate-300 mb-3">Formación técnico-humanística de alto impacto laboral.</p>
+<button class="w-full bg-gold-500 hover:bg-gold-600 text-navy-950 font-bold py-1.5 px-3 rounded-xl text-[11px] transition text-center shadow" type="button" onclick="openTechnicalOffer()">
+                        Ver Oferta Técnica
+                    </button>
+</div>
+</div>
+<!-- Footer Sidebar Info -->
+<div class="p-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 text-center sidebar-text">
+                U.E. Franz Tamayo © 2026
+            </div>
+</aside>
+<main class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-4 md:p-6 lg:p-8 relative" id="contentArea">
+<section class="section-entry" id="noticias">
+<!-- HEADER BANNER FOR NOTICIAS -->
+<div class="section-banner relative rounded-3xl overflow-hidden bg-gradient-to-r from-navy-900 via-slate-900 to-navy-950 text-white p-5 md:p-6 shadow-xl border border-navy-700/50">
+<div class="section-banner-content max-w-2xl space-y-2">
+<span class="text-xs font-bold px-3 py-1 bg-rose-600 text-white rounded-full inline-block">Canal Oficial de Comunicación</span>
+<h2 class="section-banner-title walking-title font-display text-2xl font-bold">Noticias y Circulares Institucionales</h2>
+<p class="text-xs text-slate-300">Mantente informado sobre las convocatorias, comunicados de dirección y ferias BTH 2026.</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200/80 dark:border-slate-800 space-y-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h3 class="font-display text-lg font-bold text-navy-900 dark:text-amber-400">Publicaciones Recientes</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">Filtrado por categoría o palabra clave</p>
+</div>
+<div class="relative w-full sm:w-64">
+<i class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-lucide="search"></i>
+<input class="w-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-800 dark:text-slate-100 pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-navy-500/30" id="newsSearchInput" onkeyup="filterNews()" placeholder="Buscar noticia o circular..." type="text"/>
+</div>
+</div>
+<!-- Category Filter Buttons -->
+<div class="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3 overflow-x-auto text-xs">
+<button class="news-filter-btn px-3.5 py-1.5 rounded-xl font-semibold bg-navy-800 dark:bg-amber-500 text-white dark:text-navy-950 shadow-sm whitespace-nowrap" onclick="filterNewsCategory('all')">Todas</button>
+<button class="news-filter-btn px-3.5 py-1.5 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 whitespace-nowrap" onclick="filterNewsCategory('urgente')">Urgentes</button>
+<button class="news-filter-btn px-3.5 py-1.5 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 whitespace-nowrap" onclick="filterNewsCategory('bth')">Proyectos BTH</button>
+<button class="news-filter-btn px-3.5 py-1.5 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 whitespace-nowrap" onclick="filterNewsCategory('eventos')">Eventos</button>
+<button class="news-filter-btn px-3.5 py-1.5 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 whitespace-nowrap" onclick="filterNewsCategory('actos')">Actos</button>
+</div>
+<!-- News Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="newsGrid">
+<!-- News 1 -->
+<div class="news-card border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden artcraft-glow flex flex-col bg-white dark:bg-slate-800/60" data-category="urgente">
+<div class="h-40 bg-slate-200 relative">
+<img alt="Reunión" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&amp;fit=crop&amp;q=80&amp;w=600"/>
+<span class="absolute top-3 left-3 bg-rose-600 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase shadow">Urgente</span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+<div>
+<span class="text-[11px] text-slate-400 font-medium">18 de Octubre, 2026</span>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white mt-1">Convocatoria a Reunión General de Padres de Familia</h3>
+<p class="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">Se cita a todos los tutores y padres a la asamblea ordinaria de evaluación trimestral en el coliseo del colegio.</p>
+</div>
+<button class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-navy-800 hover:text-white dark:hover:bg-amber-500 dark:hover:text-navy-950 text-navy-800 dark:text-slate-100 rounded-xl text-xs font-bold transition" onclick="openNewsDetail(this)" data-title="Convocatoria a Reunión General de Padres de Familia" data-date="18 de Octubre, 2026" data-category="Urgente" data-details="Se cita a madres, padres y tutores a la asamblea ordinaria de evaluación trimestral. Para confirmar horario y otros detalles, consultar los comunicados de Dirección." data-image="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" data-image-alt="Reunión de la comunidad educativa">Ver detalles</button>
+</div>
+</div>
+<!-- News 2 -->
+<div class="news-card border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden artcraft-glow flex flex-col bg-white dark:bg-slate-800/60" data-category="bth">
+<div class="h-40 bg-slate-200 relative">
+<img alt="Feria BTH" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&amp;fit=crop&amp;q=80&amp;w=600"/>
+<span class="absolute top-3 left-3 bg-bth-green text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase shadow">BTH 2026</span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+<div>
+<span class="text-[11px] text-slate-400 font-medium">12 de Octubre, 2026</span>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white mt-1">Feria Socio-Productiva de Proyectos BTH Rio Seco</h3>
+<p class="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">Exposición de proyectos finales de los estudiantes de 6to de secundaria para la obtención del Título Técnico Medio.</p>
+</div>
+<button class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-navy-800 hover:text-white dark:hover:bg-amber-500 dark:hover:text-navy-950 text-navy-800 dark:text-slate-100 rounded-xl text-xs font-bold transition" onclick="openNewsDetail(this)" data-title="Feria Socio-Productiva de Proyectos BTH Rio Seco" data-date="12 de Octubre, 2026" data-category="Proyectos BTH" data-details="Exposición de proyectos de estudiantes de sexto de secundaria en sus especialidades técnico-humanísticas. La muestra presenta prototipos, procesos de trabajo y propuestas productivas de la gestión." data-image="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" data-image-alt="Estudiantes trabajando en un proyecto técnico">Ver detalles</button>
+</div>
+</div>
+<!-- News 3 -->
+<div class="news-card border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden artcraft-glow flex flex-col bg-white dark:bg-slate-800/60" data-category="eventos">
+<div class="h-40 bg-slate-200 relative">
+<img alt="Deportes" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&amp;fit=crop&amp;q=80&amp;w=600"/>
+<span class="absolute top-3 left-3 bg-gold-500 text-navy-950 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase shadow">Eventos</span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+<div>
+<span class="text-[11px] text-slate-400 font-medium">05 de Octubre, 2026</span>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white mt-1">Inauguración de los Juegos Deportivos Intercursos</h3>
+<p class="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">Inicio de las competencias en las disciplinas de futsal, voleibol y básquetbol en el polideportivo escolar.</p>
+</div>
+<button class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-navy-800 hover:text-white dark:hover:bg-amber-500 dark:hover:text-navy-950 text-navy-800 dark:text-slate-100 rounded-xl text-xs font-bold transition" onclick="openNewsDetail(this)" data-title="Inauguración de los Juegos Deportivos Intercursos" data-date="05 de Octubre, 2026" data-category="Eventos" data-details="Inicio de las competencias estudiantiles de futsal, voleibol y básquetbol. La actividad promueve la participación y el trabajo en equipo; los resultados se comunicarán por los canales institucionales." data-image="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" data-image-alt="Competencia deportiva estudiantil">Ver detalles</button>
+</div>
+</div>
+<div class="news-card border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden artcraft-glow flex flex-col bg-white dark:bg-slate-800/60" data-category="urgente">
+<div class="h-40 bg-slate-200 relative"><img alt="Documentos escolares para revisión" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&amp;fit=crop&amp;q=80&amp;w=600" loading="lazy"><span class="absolute top-3 left-3 bg-rose-600 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase shadow">Urgente</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between space-y-3"><div><span class="text-[11px] text-slate-400 font-medium">Aviso de Secretaría · Gestión 2026</span><h3 class="font-bold text-sm text-navy-900 dark:text-white mt-1">Revisión de documentación escolar pendiente</h3><p class="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">Se recomienda a las familias consultar con Secretaría si tienen documentos pendientes de actualización.</p></div><button class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-navy-800 hover:text-white dark:hover:bg-amber-500 dark:hover:text-navy-950 text-navy-800 dark:text-slate-100 rounded-xl text-xs font-bold transition" onclick="openNewsDetail(this)" data-title="Revisión de documentación escolar pendiente" data-date="Aviso de Secretaría · Gestión 2026" data-category="Urgente" data-details="Se recomienda a madres, padres y tutores consultar con Secretaría si tienen documentos pendientes de actualización. El personal podrá indicar qué documentos se requieren y los horarios de atención disponibles." data-image="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" data-image-alt="Documentos escolares para revisión">Ver detalles</button></div>
+</div>
+<div class="news-card border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden artcraft-glow flex flex-col bg-white dark:bg-slate-800/60" data-category="bth">
+<div class="h-40 bg-slate-200 relative"><img alt="Taller de electrónica y robótica" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;q=80&amp;w=600" loading="lazy"><span class="absolute top-3 left-3 bg-bth-green text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase shadow">Proyectos BTH</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between space-y-3"><div><span class="text-[11px] text-slate-400 font-medium">Agenda BTH · Gestión 2026</span><h3 class="font-bold text-sm text-navy-900 dark:text-white mt-1">Muestra de Prototipos de Electrónica y Robótica</h3><p class="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">Presentación de prototipos escolares con circuitos, sensores y soluciones de automatización.</p></div><button class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-navy-800 hover:text-white dark:hover:bg-amber-500 dark:hover:text-navy-950 text-navy-800 dark:text-slate-100 rounded-xl text-xs font-bold transition" onclick="openNewsDetail(this)" data-title="Muestra de Prototipos de Electrónica y Robótica" data-date="Agenda BTH · Gestión 2026" data-category="Proyectos BTH" data-details="La muestra reúne prototipos desarrollados en los talleres de Electrónica y Robótica. Los proyectos pueden incluir circuitos, sensores y propuestas de automatización. Las fechas y horarios específicos deben confirmarse mediante los comunicados oficiales." data-image="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" data-image-alt="Circuito electrónico para prácticas de robótica">Ver detalles</button></div>
+</div>
+<div class="news-card border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden artcraft-glow flex flex-col bg-white dark:bg-slate-800/60" data-category="eventos">
+<div class="h-40 bg-slate-200 relative"><img alt="Actividad recreativa escolar" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&amp;fit=crop&amp;q=80&amp;w=600" loading="lazy"><span class="absolute top-3 left-3 bg-gold-500 text-navy-950 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase shadow">Eventos</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between space-y-3"><div><span class="text-[11px] text-slate-400 font-medium">Agenda institucional · Gestión 2026</span><h3 class="font-bold text-sm text-navy-900 dark:text-white mt-1">Jornada de Convivencia y Vida Saludable</h3><p class="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">Encuentro escolar con actividades recreativas que promueven la convivencia y el bienestar estudiantil.</p></div><button class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-navy-800 hover:text-white dark:hover:bg-amber-500 dark:hover:text-navy-950 text-navy-800 dark:text-slate-100 rounded-xl text-xs font-bold transition" onclick="openNewsDetail(this)" data-title="Jornada de Convivencia y Vida Saludable" data-date="Agenda institucional · Gestión 2026" data-category="Eventos" data-details="La jornada propone actividades recreativas y de integración para promover la convivencia, la participación y hábitos saludables. La programación detallada se comunicará por los canales oficiales." data-image="https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" data-image-alt="Actividad recreativa al aire libre">Ver detalles</button></div>
+</div>
+<div class="news-card border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden artcraft-glow flex flex-col bg-white dark:bg-slate-800/60" data-category="actos">
+<div class="h-40 bg-slate-200 relative"><img alt="Acto cívico escolar" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&amp;fit=crop&amp;q=80&amp;w=600" loading="lazy"><span class="absolute top-3 left-3 bg-navy-800 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase shadow">Actos</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between space-y-3"><div><span class="text-[11px] text-slate-400 font-medium">Agenda cívica · Gestión 2026</span><h3 class="font-bold text-sm text-navy-900 dark:text-white mt-1">Acto Cívico Institucional</h3><p class="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">Encuentro para rendir homenaje a los símbolos patrios y fortalecer la identidad de la comunidad educativa.</p></div><button class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-navy-800 hover:text-white dark:hover:bg-amber-500 dark:hover:text-navy-950 text-navy-800 dark:text-slate-100 rounded-xl text-xs font-bold transition" onclick="openNewsDetail(this)" data-title="Acto Cívico Institucional" data-date="Agenda cívica · Gestión 2026" data-category="Actos" data-details="El acto cívico reúne a estudiantes, docentes y familias para rendir homenaje a los símbolos patrios y fortalecer los valores de respeto e identidad. La fecha y el programa se confirmarán en la convocatoria oficial." data-image="https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" data-image-alt="Estudiantes reunidos en un acto escolar">Ver detalles</button></div>
+</div>
+<div class="news-card border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden artcraft-glow flex flex-col bg-white dark:bg-slate-800/60" data-category="actos">
+<div class="h-40 bg-slate-200 relative"><img alt="Presentación cultural de estudiantes" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&amp;fit=crop&amp;q=80&amp;w=600" loading="lazy"><span class="absolute top-3 left-3 bg-navy-800 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase shadow">Actos</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between space-y-3"><div><span class="text-[11px] text-slate-400 font-medium">Agenda cultural · Gestión 2026</span><h3 class="font-bold text-sm text-navy-900 dark:text-white mt-1">Festival de Danzas y Música</h3><p class="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-3">Presentaciones preparadas por los cursos para celebrar la creatividad y diversidad cultural.</p></div><button class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-navy-800 hover:text-white dark:hover:bg-amber-500 dark:hover:text-navy-950 text-navy-800 dark:text-slate-100 rounded-xl text-xs font-bold transition" onclick="openNewsDetail(this)" data-title="Festival de Danzas y Música" data-date="Agenda cultural · Gestión 2026" data-category="Actos" data-details="Festival de presentaciones artísticas preparadas por distintos cursos. La actividad busca compartir expresiones de danza y música y promover la participación estudiantil. La programación se anunciará por los medios oficiales." data-image="https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" data-image-alt="Presentación artística en escenario">Ver detalles</button></div>
+</div>
+</div>
+</div>
+<div class="fixed inset-0 bg-slate-950/65 backdrop-blur-sm z-50 hidden items-center justify-center p-4" id="newsDetailModal" role="dialog" aria-modal="true" aria-labelledby="newsDetailTitle" onclick="if(event.target===this) closeModal('newsDetailModal')">
+<article class="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-700">
+<button class="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-200 hover:bg-rose-100 dark:hover:bg-rose-900" type="button" onclick="closeModal('newsDetailModal')" aria-label="Cerrar detalle"><i class="w-5 h-5" data-lucide="x"></i></button>
+<div class="p-5 md:p-7"><div class="flex flex-wrap items-center gap-2 mb-3"><span class="text-[10px] font-bold uppercase px-2.5 py-1 rounded-full bg-navy-100 dark:bg-slate-800 text-navy-800 dark:text-amber-300" id="newsDetailCategory"></span><span class="text-xs text-slate-500 dark:text-slate-400" id="newsDetailDate"></span></div><h3 class="font-display text-xl md:text-2xl font-bold text-navy-900 dark:text-white pr-8" id="newsDetailTitle"></h3><p class="text-sm text-slate-600 dark:text-slate-300 mt-4 leading-relaxed" id="newsDetailText"></p></div>
+<img class="block w-full max-h-[360px] object-cover" id="newsDetailImage" src="" alt="" loading="lazy">
+</article>
+</div>
+</section>
+</main>
+</div>
+<div class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden items-center justify-center p-4" id="aiModal">
+<div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative animate-in zoom-in-95 duration-200">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white p-1" onclick="closeModal('aiModal')">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<!-- AI Header -->
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-gold-400 text-navy-950 flex items-center justify-center font-bold shadow-lg">
+<i class="w-5 h-5" data-lucide="sparkles"></i>
+</div>
+<div>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white">Asistente Virtual IA Tamayita</h3>
+<p class="text-[11px] text-slate-500 dark:text-slate-400">Consultas sobre BTH, trámites y horarios</p>
+</div>
+</div>
+<!-- Chat Log area -->
+<div class="h-56 overflow-y-auto bg-slate-50 dark:bg-slate-800/50 p-3 rounded-2xl border border-slate-200 dark:border-slate-700/80 space-y-3 text-xs" id="aiChatLog">
+<div class="flex gap-2">
+<div class="w-6 h-6 rounded-full bg-gold-500 text-navy-950 flex items-center justify-center font-bold text-[10px] flex-shrink-0">IA</div>
+<div class="bg-white dark:bg-slate-700 p-2.5 rounded-2xl rounded-tl-none shadow-sm text-slate-700 dark:text-slate-100 max-w-[85%]">
+                        ¡Hola! Soy tu asistente de Inteligencia Artificial para la U.E. Franz Tamayo. ¿En qué puedo ayudarte hoy?
+                    </div>
+</div>
+</div>
+<!-- Quick AI Prompt Pills -->
+<div class="flex gap-1.5 overflow-x-auto py-2 text-[10px]">
+<button class="bg-slate-100 dark:bg-slate-800 hover:bg-gold-500 hover:text-navy-950 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium transition" onclick="sendAiQuickPrompt('¿Cuáles son los requisitos de titulación BTH?')">Requisitos BTH</button>
+<button class="bg-slate-100 dark:bg-slate-800 hover:bg-gold-500 hover:text-navy-950 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium transition" onclick="sendAiQuickPrompt('¿Cuándo son los exámenes trimestrales?')">Calendario Exámenes</button>
+<button class="bg-slate-100 dark:bg-slate-800 hover:bg-gold-500 hover:text-navy-950 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium transition" onclick="sendAiQuickPrompt('¿Dónde se ubica la secretaría?')">Ubicación</button>
+</div>
+<!-- AI Input -->
+<div class="flex gap-2 mt-2">
+<input class="flex-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-gold-500/50" id="aiInput" onkeypress="if(event.key==='Enter') sendAiMessage()" placeholder="Escribe tu consulta aquí..." type="text"/>
+<button class="bg-navy-800 dark:bg-amber-500 text-white dark:text-navy-950 px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-navy-900 transition flex items-center justify-center" onclick="sendAiMessage()">
+<i class="w-4 h-4" data-lucide="send"></i>
+</button>
+</div>
+</div>
+</div><div class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4" id="bthSistemasModal">
+<div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1" onclick="closeModal('bthSistemasModal')">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+<i class="w-5 h-5" data-lucide="code"></i>
+</div>
+<div>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white">Módulo BTH: Sistemas Informáticos</h3>
+<p class="text-[11px] text-slate-500">Plan de estudios oficial - Gestión 2026</p>
+</div>
+</div>
+<div class="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+<p><strong>4to de Secundaria:</strong> Arquitectura de hardware, ensamble de computadoras, diseño gráfico digital elemental y lógica de programación.</p>
+<p><strong>5to de Secundaria:</strong> Redes de datos LAN/WLAN, desarrollo de páginas web (HTML, CSS, JS), bases de datos relacionales SQL.</p>
+<p><strong>6to de Secundaria:</strong> Desarrollo de aplicaciones móviles, proyectos socio-productivos de software y defensa de grado técnico medio.</p>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+<button class="bg-navy-800 dark:bg-amber-500 dark:text-navy-950 text-white px-4 py-2 rounded-xl text-xs font-bold" onclick="closeModal('bthSistemasModal')">Cerrar Ventana</button>
+</div>
+</div>
+</div><div class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4" id="bthContabilidadModal">
+<div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1" onclick="closeModal('bthContabilidadModal')">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+<i class="w-5 h-5" data-lucide="calculator"></i>
+</div>
+<div>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white">Módulo BTH: Contabilidad General</h3>
+<p class="text-[11px] text-slate-500">Plan de estudios oficial - Gestión 2026</p>
+</div>
+</div>
+<div class="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+<p><strong>Competencias:</strong> Manejo del ciclo contable completo, balances generales, libros diarios, conciliación bancaria y normativa del SIN boliviano.</p>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+<button class="bg-navy-800 dark:bg-amber-500 dark:text-navy-950 text-white px-4 py-2 rounded-xl text-xs font-bold" onclick="closeModal('bthContabilidadModal')">Cerrar Ventana</button>
+</div>
+</div>
+</div><div class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4" id="demoCalificacionesModal">
+<div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1" onclick="closeModal('demoCalificacionesModal')">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+<h3 class="font-bold text-sm text-navy-900 dark:text-white mb-1">Simulador de Consulta de Calificaciones</h3>
+<p class="text-xs text-slate-500 mb-4">Vista previa de libreta digital - Estudiante Demostración</p>
+<div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3 text-xs">
+<div class="flex justify-between border-b dark:border-slate-700 pb-2">
+<span class="font-bold text-slate-700 dark:text-slate-300">Estudiante:</span>
+<span class="text-slate-900 dark:text-white font-semibold">Mamani Quispe, Joel (6to B)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="dark:text-slate-300">Sistemas Informáticos (BTH):</span>
+<span class="font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">95 / 100</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="dark:text-slate-300">Matemáticas:</span>
+<span class="font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">88 / 100</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="dark:text-slate-300">Física - Química:</span>
+<span class="font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">84 / 100</span>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+<button class="bg-navy-800 dark:bg-amber-500 dark:text-navy-950 text-white px-4 py-2 rounded-xl text-xs font-bold" onclick="closeModal('demoCalificacionesModal')">Cerrar Simulador</button>
+</div>
+</div>
+</div><div class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4" id="lightboxModal" onclick="closeLightbox()">
+<div class="relative max-w-4xl w-full text-center" onclick="event.stopPropagation()">
+<button class="absolute -top-10 right-0 text-white hover:text-slate-300" onclick="closeLightbox()">
+<i class="w-8 h-8" data-lucide="x"></i>
+</button>
+<img alt="Vista Previa" class="max-h-[80vh] mx-auto rounded-xl shadow-2xl border border-slate-800" id="lightboxImg" src=""/>
+<p class="text-white text-xs font-semibold mt-3" id="lightboxCaption"></p>
+</div>
+</div><div class="fixed bottom-5 right-5 bg-navy-950 dark:bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-navy-700 dark:border-slate-700 text-xs flex items-center gap-3 translate-y-20 opacity-0 transition duration-300 z-50" id="toast">
+<i class="w-4 h-4 text-gold-400" data-lucide="info"></i>
+<span id="toastMessage">Notificación</span>
+</div>
+<script>
+/* JavaScript propio de noticias.html integrado en este archivo */
+// JavaScript independiente de esta página de la plataforma Franz Tamayo
+(() => {
+  const sidebar = document.getElementById('mainSidebar');
+  const toggleBtn = document.getElementById('toggleSidebarBtn');
+  const notificationsControl = document.getElementById('notificationsControl');
+  const notificationsButton = document.getElementById('notificationsButton');
+  const notificationsPanel = document.getElementById('notificationsPanel');
+  const currentPage = document.body.dataset.page || 'inicio';
+  function updateNotificationCount() {
+    const unreadCount = document.querySelectorAll('.notification-item[data-read="false"]').length;
+    const badge = document.getElementById('notificationBadge');
+    const summary = document.getElementById('notificationSummary');
+    if (badge) {
+      badge.textContent = String(unreadCount);
+      badge.hidden = unreadCount === 0;
+      badge.setAttribute('aria-label', `${unreadCount} notificaciones sin leer`);
+    }
+    if (summary) summary.textContent = unreadCount ? `Tienes ${unreadCount} avisos sin leer` : 'Estás al día';
+  }
+  window.toggleNotifications = function() {
+    if (!notificationsPanel || !notificationsButton) return;
+    const open = notificationsPanel.hidden;
+    notificationsPanel.hidden = !open;
+    notificationsButton.setAttribute('aria-expanded', String(open));
+    if (open && window.lucide) window.lucide.createIcons();
+  };
+  window.closeNotifications = function(restoreFocus = false) {
+    if (!notificationsPanel || !notificationsButton) return;
+    notificationsPanel.hidden = true;
+    notificationsButton.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) notificationsButton.focus();
+  };
+  window.markNotificationRead = function(notification) {
+    if (notification.dataset.read === 'true') return;
+    notification.dataset.read = 'true';
+    notification.querySelector('[data-notification-indicator]')?.classList.replace('bg-rose-500', 'bg-transparent');
+    updateNotificationCount();
+  };
+  window.markAllNotificationsRead = function() {
+    document.querySelectorAll('.notification-item[data-read="false"]').forEach(window.markNotificationRead);
+  };
+  document.addEventListener('click', event => {
+    if (notificationsPanel && !notificationsPanel.hidden && !notificationsControl?.contains(event.target)) window.closeNotifications();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && notificationsPanel && !notificationsPanel.hidden) {
+      event.stopPropagation();
+      window.closeNotifications(true);
+    }
+  });
+  function animateBannerTitle() {
+    const title = document.querySelector('.walking-title');
+    if (!title) return;
+    const text = title.dataset.originalText || title.textContent.trim();
+    title.dataset.originalText = text; title.setAttribute('aria-label', text);
+    const visualText = document.createElement('span'); visualText.setAttribute('aria-hidden', 'true');
+    let step = 0;
+    text.split(/(\s+)/u).forEach(part => {
+      if (!part.trim()) { visualText.append(document.createTextNode(part)); return; }
+      const word = document.createElement('span'); word.className = 'walking-title-word';
+      for (const character of part) { const letter = document.createElement('span'); letter.className = 'walking-title-letter'; letter.style.setProperty('--step', String(step++)); letter.textContent = character; word.append(letter); }
+      visualText.append(word);
+    });
+    title.replaceChildren(visualText);
+  }
+  animateBannerTitle();
+  window.addEventListener('pageshow', event => { if (event.persisted) animateBannerTitle(); });
+
+  // Tema accesible y persistente entre las siete páginas.
+  function applyTheme() {
+    const saved = localStorage.getItem('theme');
+    const dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', dark);
+  }
+  applyTheme();
+  window.toggleDarkMode = function () {
+    const dark = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+    showToast(dark ? 'Modo oscuro activado' : 'Modo claro activado');
+  };
+
+  // Menú: plegable en escritorio y desplegable como panel en móvil.
+  function syncMenuForViewport() {
+    if (!sidebar) return;
+    if (window.innerWidth >= 768) {
+      sidebar.classList.remove('-translate-x-full');
+      document.body.classList.remove('menu-open');
+    } else if (!sidebar.dataset.mobileOpened) {
+      sidebar.classList.add('-translate-x-full');
+      document.body.classList.remove('menu-open');
+    }
+  }
+  function syncToggleButton() {
+    if (!toggleBtn || !sidebar) return;
+    const isOpen = window.innerWidth >= 768 ? !sidebar.classList.contains('sidebar-collapsed') : !sidebar.classList.contains('-translate-x-full');
+    toggleBtn.setAttribute('aria-expanded', String(isOpen));
+    toggleBtn.setAttribute('aria-label', isOpen ? 'Plegar menú' : 'Desplegar menú');
+    toggleBtn.title = isOpen ? 'Plegar menú' : 'Desplegar menú';
+    toggleBtn.innerHTML = `<i class="w-5 h-5" data-lucide="${isOpen ? 'panel-left' : 'arrow-right'}"></i>`;
+    if (window.lucide) window.lucide.createIcons();
+  }
+  if (toggleBtn && sidebar) {
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    toggleBtn.setAttribute('aria-label', 'Plegar o desplegar menú');
+    toggleBtn.addEventListener('click', () => {
+      if (window.innerWidth >= 768) {
+        const collapsed = sidebar.classList.toggle('sidebar-collapsed');
+        toggleBtn.setAttribute('aria-expanded', String(!collapsed));
+      } else {
+        const open = sidebar.classList.contains('-translate-x-full');
+        sidebar.classList.toggle('-translate-x-full', !open);
+        sidebar.dataset.mobileOpened = open ? 'true' : '';
+        document.body.classList.toggle('menu-open', open);
+        toggleBtn.setAttribute('aria-expanded', String(open));
+      }
+      syncToggleButton();
+    });
+    window.addEventListener('resize', () => { syncMenuForViewport(); syncToggleButton(); });
+    syncMenuForViewport();
+    syncToggleButton();
+  }
+  const contentArea = document.getElementById('contentArea');
+  const sectionBanner = document.querySelector('.section-banner');
+  if (contentArea && sectionBanner) {
+    contentArea.addEventListener('scroll', () => {
+      const offset = Math.min(contentArea.scrollTop * 0.04, 18);
+      sectionBanner.style.setProperty('--section-parallax', `${offset}px`);
+    }, { passive: true });
+  }
+  // Close mobile menu after choosing a destination. Navigation is now real HTML pages.
+  sidebar?.querySelectorAll('a.nav-item').forEach(link => {
+    const target = link.getAttribute('href') || '';
+    const active = target === (currentPage === 'inicio' ? 'index.html' : currentPage + '.html');
+    if (active) {
+      link.classList.add('bg-navy-50','dark:bg-slate-800','text-navy-800','dark:text-amber-400');
+      link.setAttribute('aria-current','page');
+    }
+    link.addEventListener('click', () => {
+      if (window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full'); sidebar.dataset.mobileOpened = '';
+        document.body.classList.remove('menu-open');
+      }
+    });
+  });
+  window.navigateTo = function (page) {
+    const routes = { inicio:'index.html', academico:'academico.html', noticias:'noticias.html', estudiantes:'estudiantes.html', institucion:'institucion.html', galeria:'galeria.html', contacto:'contacto.html' };
+    if (routes[page]) window.location.href = routes[page];
+  };
+
+  window.openModal = function (id) { const el=document.getElementById(id); if(el){el.classList.remove('hidden');el.classList.add('flex');} };
+  let newsDetailTrigger = null;
+  window.closeModal = function (id) {
+    const el=document.getElementById(id);
+    if(el){el.classList.add('hidden');el.classList.remove('flex');}
+    if(id==='newsDetailModal'&&newsDetailTrigger){newsDetailTrigger.focus();newsDetailTrigger=null;}
+  };
+  window.showToast = function (message) {
+    const toast=document.getElementById('toast'), msg=document.getElementById('toastMessage');
+    if(!toast||!msg) return; msg.textContent=message; toast.classList.remove('translate-y-20','opacity-0');
+    clearTimeout(window.__toastTimer); window.__toastTimer=setTimeout(()=>toast.classList.add('translate-y-20','opacity-0'),3000);
+  };
+  window.openLightbox = function (src, caption) {
+    const img=document.getElementById('lightboxImg'), text=document.getElementById('lightboxCaption'), modal=document.getElementById('lightboxModal');
+    if(!img||!modal) return; img.src=src; if(text) text.textContent=caption||''; modal.classList.remove('hidden');modal.classList.add('flex');
+  };
+  window.closeLightbox = function () { const el=document.getElementById('lightboxModal'); if(el){el.classList.add('hidden');el.classList.remove('flex');} };
+
+  window.filterNewsCategory = function(category) {
+    document.querySelectorAll('.news-card').forEach(card => card.style.display = category==='all'||card.dataset.category===category ? 'flex':'none');
+    document.querySelectorAll('.news-filter-btn').forEach(btn => { const on=(btn.getAttribute('onclick')||'').includes("'"+category+"'"); btn.classList.toggle('filter-selected',on); });
+  };
+  window.openNewsDetail = function(button) {
+    if (!button) return;
+    const modal = document.getElementById('newsDetailModal');
+    const image = document.getElementById('newsDetailImage');
+    if (!modal || !image) return;
+    newsDetailTrigger = button;
+    document.getElementById('newsDetailCategory').textContent = button.dataset.category || '';
+    document.getElementById('newsDetailDate').textContent = button.dataset.date || '';
+    document.getElementById('newsDetailTitle').textContent = button.dataset.title || '';
+    document.getElementById('newsDetailText').textContent = button.dataset.details || '';
+    image.src = button.dataset.image || '';
+    image.alt = button.dataset.imageAlt || button.dataset.title || 'Imagen de la publicación';
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.querySelector('button')?.focus();
+  };
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !document.getElementById('newsDetailModal')?.classList.contains('hidden')) {
+      window.closeModal('newsDetailModal');
+    }
+  });
+  window.filterNews = function() {
+    const input=document.getElementById('newsSearchInput'); if(!input)return; const q=input.value.toLowerCase().trim();
+    document.querySelectorAll('.news-card').forEach(card=>card.style.display=card.innerText.toLowerCase().includes(q)?'flex':'none');
+  };
+  window.filterGallery = function(category) {
+    document.querySelectorAll('.gallery-item').forEach(item=>item.style.display=category==='all'||item.dataset.category===category?'block':'none');
+  };
+  window.handleGlobalSearch = function() {
+    const input=document.getElementById('globalSearchInput'); if(!input)return; const q=input.value.toLowerCase().trim(); if(q.length<3)return;
+    let page='';
+    if(/bth|sistemas|contabilidad|malla|academ/.test(q)) page='academico';
+    else if(/noticia|comunicado|reuni|aviso/.test(q)) page='noticias';
+    else if(/estudiante|horario|libreta|tutor|biblioteca/.test(q)) page='estudiantes';
+    else if(/contacto|ubicaci|tel[eé]fono|direcci/.test(q)) page='contacto';
+    else if(/historia|instituci|misi[oó]n|visi[oó]n/.test(q)) page='institucion';
+    else if(/foto|galer[ií]a|imagen/.test(q)) page='galeria';
+    if(page) navigateTo(page);
+  };
+  window.handleContactSubmit = function(e) { e.preventDefault(); showToast('Mensaje registrado en este prototipo. Para recibirlo realmente se necesita conectar un servidor.'); e.target.reset(); };
+
+  // Asistente demostrativo conservado en el prototipo.
+  window.sendAiMessage = function() {
+    const input=document.getElementById('aiInput'); if(!input)return; const text=input.value.trim(); if(!text)return;
+    appendAiUserMessage(text); input.value='';
+    const lower=text.toLowerCase(); let reply='Consulta las secciones Académico, Noticias o Contacto para encontrar información institucional.';
+    if(/bth|titulaci[oó]n|requisito/.test(lower)) reply='Para información sobre la formación BTH, revisa Académico y confirma los requisitos vigentes con Dirección.';
+    else if(/examen|trimestre|fecha/.test(lower)) reply='Revisa Noticias y Avisos para consultar los comunicados académicos publicados por la institución.';
+    else if(/ubicaci[oó]n|d[oó]nde|direcci[oó]n/.test(lower)) reply='La plataforma identifica a la U.E. Franz Tamayo de Río Seco, El Alto. Confirma la dirección y horarios con Secretaría.';
+    setTimeout(()=>appendAiBotMessage(reply),350);
+  };
+  window.sendAiQuickPrompt = function(text) { const input=document.getElementById('aiInput'); if(input){input.value=text;sendAiMessage();} };
+  window.appendAiUserMessage = function(msg) { const log=document.getElementById('aiChatLog'); if(!log)return; const row=document.createElement('div');row.className='flex justify-end gap-2';const bubble=document.createElement('div');bubble.className='bg-navy-800 dark:bg-amber-500 text-white dark:text-navy-950 p-2.5 rounded-2xl rounded-tr-none shadow-sm max-w-[85%]';bubble.textContent=msg;row.appendChild(bubble);log.appendChild(row);log.scrollTop=log.scrollHeight; };
+  window.appendAiBotMessage = function(msg) { const log=document.getElementById('aiChatLog'); if(!log)return; const row=document.createElement('div');row.className='flex gap-2';const bubble=document.createElement('div');bubble.className='bg-white dark:bg-slate-700 p-2.5 rounded-2xl shadow-sm text-slate-700 dark:text-slate-100 max-w-[85%]';bubble.textContent=msg;row.appendChild(bubble);log.appendChild(row);log.scrollTop=log.scrollHeight; };
+
+  if(window.lucide) window.lucide.createIcons();
+})();
+
+</script>
+<div class="fixed inset-0 z-[100] hidden cursor-pointer select-none items-center justify-center overflow-hidden bg-slate-950 text-white" id="privacyScreen" role="dialog" aria-modal="true" aria-label="Pantalla de privacidad" aria-describedby="privacyScreenHint" tabindex="-1" onclick="dismissPrivacyScreen()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();dismissPrivacyScreen()}">
+<div class="pointer-events-none absolute inset-0 bg-cover bg-center" id="privacyBackgroundImage" aria-hidden="true"></div>
+<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-slate-950/70 via-indigo-950/60 to-slate-900/70"></div>
+<div class="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-amber-400/20 blur-3xl"></div>
+<div class="pointer-events-none absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-indigo-400/20 blur-3xl"></div>
+<div class="pointer-events-none absolute inset-0 opacity-[.08]" style="background-image:linear-gradient(135deg,transparent 48%,#fff 49%,#fff 50%,transparent 51%);background-size:48px 48px"></div>
+<div class="pointer-events-none relative mx-6 max-w-lg rounded-3xl border border-white/15 bg-white/[.07] px-8 py-10 text-center shadow-2xl backdrop-blur-xl sm:px-14">
+<div class="mx-auto mb-5 h-1 w-14 rounded-full bg-gradient-to-r from-amber-300 to-emerald-300"></div>
+<p class="mb-3 text-xs font-bold uppercase tracking-[.28em] text-amber-200">U.E. Franz Tamayo · Río Seco</p>
+<h2 class="font-display text-2xl font-bold sm:text-3xl">Pantalla protegida</h2>
+<p class="mt-3 text-sm text-slate-300" id="privacyScreenHint">Toca o haz clic en cualquier parte para volver a tu página.</p>
+<p class="mt-6 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Modo privacidad</p>
+</div>
+</div>
+<script>
+(() => {
+  const PRIVACY_BACKGROUND_IMAGES = [
+    // Agrega rutas de imágenes, por ejemplo: 'assets/pausa-fondo.jpg'
+  ];
+  const screen = document.getElementById('privacyScreen');
+  if (screen) document.body.prepend(screen);
+  const trigger = document.getElementById('privacyModeButton');
+  if (!screen || !trigger) return;
+  let inertStates = [];
+  const backgroundImage = document.getElementById('privacyBackgroundImage');
+  function setPrivacyBackground() {
+    if (!backgroundImage || !PRIVACY_BACKGROUND_IMAGES.length) return;
+    const image = PRIVACY_BACKGROUND_IMAGES[Math.floor(Math.random() * PRIVACY_BACKGROUND_IMAGES.length)];
+    backgroundImage.style.backgroundImage = `url("${image.replace(/"/g, '\\"')}")`;
+  }
+  function closePrivacyScreen() {
+    screen.classList.add('hidden');
+    screen.classList.remove('flex');
+    trigger.setAttribute('aria-pressed', 'false');
+    inertStates.forEach(({ element, wasInert }) => { element.inert = wasInert; });
+    inertStates = [];
+    trigger.focus({ preventScroll: true });
+  }
+  window.togglePrivacyScreen = function () {
+    setPrivacyBackground();
+    screen.classList.remove('hidden');
+    screen.classList.add('flex');
+    trigger.setAttribute('aria-pressed', 'true');
+    inertStates = Array.from(document.body.children)
+      .filter(element => element !== screen)
+      .map(element => ({ element, wasInert: element.inert }));
+    inertStates.forEach(({ element }) => { element.inert = true; });
+    screen.focus({ preventScroll: true });
+  };
+  window.dismissPrivacyScreen = closePrivacyScreen;
+  screen.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closePrivacyScreen();
+    }
+  });
+})();
+</script>
+<script src="ficha.js" defer></script>
+</body>
+</html>
