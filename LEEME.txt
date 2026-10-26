@@ -1,7 +1,7 @@
 PLATAFORMA U.E. FRANZ TAMAYO - 7 HTML AUTÓNOMOS
 
 Cada página HTML contiene su propio CSS dentro de <style> y su JavaScript dentro de <script>.
-No necesitas archivos .css o .js locales separados.
+No necesitas archivos .css o .js locales separados, aunque hay excepciones en un solo caso que fichas js.
 
 Archivos:
 - index.html: Inicio
